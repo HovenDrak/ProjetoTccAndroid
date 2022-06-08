@@ -1,4 +1,4 @@
-package com.example.smarthhome.fragments
+package com.example.smarthhome.ui.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

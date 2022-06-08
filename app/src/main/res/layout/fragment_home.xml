@@ -3,12 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ui.fragments.HomeFragment"
+    android:id="@+id/scroll_view_alarm">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".fragments.HomeFragment"
         android:id="@+id/constraint_home">
 
         <com.google.android.material.card.MaterialCardView
@@ -110,6 +111,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <ProgressBar
+                    android:id="@+id/progressBarAlarm"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:indeterminate="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:layout_editor_absoluteY="0dp" />
+
                 <TextView
                     android:id="@+id/home"
                     android:layout_width="wrap_content"
@@ -124,6 +137,33 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageButton
+                    android:id="@+id/btnDefault"
+                    android:layout_width="89dp"
+                    android:layout_height="84dp"
+                    android:layout_marginTop="10dp"
+                    android:backgroundTint="#00FFFFFF"
+                    android:contentDescription="@string/icone_desarme"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_alarm_default"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/home" />
+
+                <TextView
+                    android:id="@+id/txtDefault"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/desarm"
+                    android:layout_marginBottom="8dp"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/btnDefault"
+                    tools:ignore="SmallSp"/>
+
+                <ImageButton
                     android:id="@+id/btnDesarm"
                     android:layout_width="89dp"
                     android:layout_height="84dp"
@@ -132,6 +172,7 @@
                     android:contentDescription="@string/icone_desarme"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_desarm"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/home" />
@@ -144,6 +185,7 @@
                     android:layout_marginBottom="8dp"
                     android:textSize="18sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -156,7 +198,7 @@
                     android:layout_height="84dp"
                     android:layout_marginTop="10dp"
                     android:backgroundTint="#00FFFFFF"
-                    android:contentDescription="@string/icone_desarme"
+                    android:contentDescription="@string/icone_arme"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_arm"
                     android:visibility="gone"
@@ -179,6 +221,34 @@
                     app:layout_constraintTop_toBottomOf="@+id/btnArm"
                     tools:ignore="SmallSp"/>
 
+                <ImageButton
+                    android:id="@+id/btnVioled"
+                    android:layout_width="89dp"
+                    android:layout_height="84dp"
+                    android:layout_marginTop="10dp"
+                    android:backgroundTint="#00FFFFFF"
+                    android:contentDescription="@string/icone_violacao"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_alarm_violed"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/home" />
+
+                <TextView
+                    android:id="@+id/txtVioled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/violed"
+                    android:layout_marginBottom="8dp"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/btnVioled"
+                    tools:ignore="SmallSp"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -258,7 +328,7 @@
                             android:layout_height="58dp"
                             android:layout_marginEnd="8dp"
                             android:contentDescription="@string/status_sensor"
-                            android:background="@mipmap/img_setor_close"
+                            android:background="@mipmap/img_setor_default"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="1.0"
@@ -289,7 +359,7 @@
                             android:layout_height="58dp"
                             android:layout_marginEnd="8dp"
                             android:contentDescription="@string/status_sensor"
-                            android:background="@mipmap/img_setor_close"
+                            android:background="@mipmap/img_setor_default"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="1.0"
@@ -333,7 +403,7 @@
                             android:layout_height="58dp"
                             android:layout_marginEnd="8dp"
                             android:contentDescription="@string/status_sensor"
-                            android:background="@mipmap/img_setor_close"
+                            android:background="@mipmap/img_setor_default"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="1.0"
@@ -378,7 +448,7 @@
                             android:layout_height="58dp"
                             android:layout_marginEnd="8dp"
                             android:contentDescription="@string/status_sensor"
-                            android:background="@mipmap/img_setor_close"
+                            android:background="@mipmap/img_setor_default"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="1.0"
