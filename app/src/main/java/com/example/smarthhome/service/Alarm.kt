@@ -6,13 +6,20 @@ import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
+import androidx.fragment.app.Fragment
 import com.example.smarthhome.R
 import com.example.smarthhome.databinding.FragmentHomeBinding
 import com.example.smarthhome.model.Status
 
-class Alarm {
-    
-    fun stateArm(binding: FragmentHomeBinding) {
+class Alarm: Fragment(R.layout.fragment_home) {
+
+    private lateinit var binding: FragmentHomeBinding
+
+    fun setBinding(binding: FragmentHomeBinding){
+        this.binding = binding
+    }
+
+    private fun stateArm() {
         Log.d("MQTT", "atualizando status alarme para ARMADO")
 
         binding.btnDesarm.visibility = View.GONE
@@ -26,7 +33,7 @@ class Alarm {
         binding.txtActiveDesarm.visibility = View.VISIBLE
     }
 
-    fun stateDesarm(binding: FragmentHomeBinding) {
+    private fun stateDisarm() {
         Log.d("MQTT", "atualizando status alarme para DESARMADO")
 
         binding.btnDesarm.visibility = View.VISIBLE
@@ -40,7 +47,7 @@ class Alarm {
         binding.txtActiveDesarm.visibility = View.GONE
     }
 
-    fun stateVioled(binding: FragmentHomeBinding) {
+    private fun stateVioled() {
         Log.d("MQTT", "atualizando status alarme para DISPARADO")
 
         binding.btnArm.visibility = View.GONE
@@ -51,7 +58,7 @@ class Alarm {
         binding.btnVioled.startAnimation(configAnimationVioled())
     }
 
-     fun disableDefault(binding: FragmentHomeBinding) {
+     fun disableDefault() {
         binding.progressBarAlarm.visibility = View.GONE
         binding.btnDefault.visibility = View.GONE
         binding.txtDefault.visibility = View.GONE
@@ -66,7 +73,7 @@ class Alarm {
         return animationVioled
     }
 
-    fun stateSensor(imageView: ImageView, status: String) {
+    private fun stateSensor(imageView: ImageView, status: String) {
         Log.d("MQTT", "atualizando status para $status")
         when (status) {
             "fechado" -> imageView.setBackgroundResource(R.mipmap.img_setor_close)
@@ -77,11 +84,11 @@ class Alarm {
         }
     }
 
-    fun updateAllStateAlarm(list: List<Status>?, binding: FragmentHomeBinding) {
+    fun updateAllStateAlarm(list: List<Status>?) {
         when (list!![0].status) {
-            "desarmado" -> stateDesarm(binding)
-            "armado" -> stateArm(binding)
-            "disparado" -> stateVioled(binding)
+            "desarmado" -> stateDisarm()
+            "armado" -> stateArm()
+            "disparado" -> stateVioled()
         }
         for (i in 1..5) {
             when (i) {
@@ -93,7 +100,7 @@ class Alarm {
         }
     }
 
-    fun updateStateSensor(setor: Int, status: String, binding: FragmentHomeBinding) {
+    fun updateStateSensor(setor: Int, status: String) {
         Log.i("MQTT", "atualizando status setor $setor")
         when (setor) {
             1 -> stateSensor(binding.setor1ImgStatus, status)
@@ -104,12 +111,12 @@ class Alarm {
 
     }
 
-    fun updateStateAlarme(status: String, binding: FragmentHomeBinding) {
+    fun updateStateAlarme(status: String) {
         Log.d("MQTT", "atualizando status ALARME para $status")
         when (status) {
-            "\"desarmado\"" -> stateDesarm(binding)
-            "\"armado\"" -> stateArm(binding)
-            "\"disparado\"" -> stateVioled(binding)
+            "\"desarmado\"" -> stateDisarm()
+            "\"armado\"" -> stateArm()
+            "\"disparado\"" -> stateVioled()
         }
     }
 }

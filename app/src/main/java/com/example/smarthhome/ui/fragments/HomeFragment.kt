@@ -7,10 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
-import com.example.smarthhome.CallbackAlarmApi
 import com.example.smarthhome.R
 import com.example.smarthhome.databinding.FragmentHomeBinding
-import com.example.smarthhome.model.Status
 import com.example.smarthhome.repository.ApiRepository
 import com.example.smarthhome.repository.MqttRepository
 import com.example.smarthhome.service.Alarm
@@ -23,7 +21,7 @@ import java.util.*
 import kotlin.concurrent.schedule
 
 
-class HomeFragment: Fragment(), CallbackAlarmApi {
+class HomeFragment: Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -43,14 +41,10 @@ class HomeFragment: Fragment(), CallbackAlarmApi {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        apiRepository.callbackAlarmApi = this
+        alarmCmnd.setBinding(binding)
         mqttConfig()
+        configButtons()
         apiRepository.getCurrentState(requireContext())
-        configButtonDesarm()
-        configButtonArm()
-        configButtonVioled()
-        configButtonActiveDesarm()
-        configButtonActiveArm()
         return binding.root
     }
 
@@ -74,11 +68,11 @@ class HomeFragment: Fragment(), CallbackAlarmApi {
                 )
                 val msg = message.toString()
                 when (topic) {
-                    "status/${topicsAlarm[0]}" -> alarmCmnd.updateStateAlarme(msg, binding)
-                    "status/${topicsAlarm[1]}" -> alarmCmnd.updateStateSensor(1, msg, binding)
-                    "status/${topicsAlarm[2]}" -> alarmCmnd.updateStateSensor(2, msg, binding)
-                    "status/${topicsAlarm[3]}" -> alarmCmnd.updateStateSensor(3, msg, binding)
-                    "status/${topicsAlarm[4]}" -> alarmCmnd.updateStateSensor(4, msg, binding)
+                    "status/${topicsAlarm[0]}" -> alarmCmnd.updateStateAlarme(msg)
+                    "status/${topicsAlarm[1]}" -> alarmCmnd.updateStateSensor(1, msg)
+                    "status/${topicsAlarm[2]}" -> alarmCmnd.updateStateSensor(2, msg)
+                    "status/${topicsAlarm[3]}" -> alarmCmnd.updateStateSensor(3, msg)
+                    "status/${topicsAlarm[4]}" -> alarmCmnd.updateStateSensor(4, msg)
                     else -> Log.d("MQTT", "Não foi possivel processar o STATUS")
                 }
             }
@@ -88,6 +82,14 @@ class HomeFragment: Fragment(), CallbackAlarmApi {
             }
         })
         mqttRepository.subscribeTopics(topicsAlarm)
+    }
+
+    private fun configButtons() {
+        configButtonDesarm()
+        configButtonArm()
+        configButtonVioled()
+        configButtonActiveDesarm()
+        configButtonActiveArm()
     }
 
     private fun configButtonActiveDesarm() {
@@ -140,21 +142,12 @@ class HomeFragment: Fragment(), CallbackAlarmApi {
     private fun runAnimation(animationCommand: Int, animationStatus: Int, visible: Int) {
         binding
             .materialCardViewComand
-            .startAnimation(AnimationUtils
-                .loadAnimation(context, animationCommand))
+            .startAnimation(AnimationUtils.loadAnimation(context, animationCommand))
         binding
             .materialCardViewComand
             .visibility = visible
         binding
             .materialCardViewSensors
-            .startAnimation(AnimationUtils
-                .loadAnimation(context, animationStatus))
+            .startAnimation(AnimationUtils.loadAnimation(context, animationStatus))
     }
-
-    override fun reveiverApi(list: List<Status>?) {
-        Log.i("Receiver API", "chegou mensagem no receiberAPI")
-        alarmCmnd.disableDefault(binding)
-        alarmCmnd.updateAllStateAlarm(list, binding)
-    }
-
 }
