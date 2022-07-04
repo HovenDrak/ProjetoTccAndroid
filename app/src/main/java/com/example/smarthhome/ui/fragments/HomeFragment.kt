@@ -6,12 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.smarthhome.R
 import com.example.smarthhome.databinding.FragmentHomeBinding
 import com.example.smarthhome.repository.ApiRepository
 import com.example.smarthhome.repository.MqttRepository
 import com.example.smarthhome.service.Alarm
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
 import org.eclipse.paho.client.mqttv3.MqttCallback
@@ -44,7 +46,7 @@ class HomeFragment: Fragment() {
         alarmCmnd.setBinding(binding)
         mqttConfig()
         configButtons()
-        apiRepository.getCurrentState(requireContext())
+        apiRepository.getCurrentStateHome(requireContext())
         return binding.root
     }
 
@@ -73,15 +75,27 @@ class HomeFragment: Fragment() {
                     "status/${topicsAlarm[2]}" -> alarmCmnd.updateStateSensor(2, msg)
                     "status/${topicsAlarm[3]}" -> alarmCmnd.updateStateSensor(3, msg)
                     "status/${topicsAlarm[4]}" -> alarmCmnd.updateStateSensor(4, msg)
+                    "error/${topicsAlarm[0]}" -> {
+                        Log.i("MQTT", "Error alarme: $msg")
+                        showAlert("Erro ao enviar comando", msg)
+                    }
                     else -> Log.d("MQTT", "Não foi possivel processar o STATUS")
                 }
             }
 
             override fun deliveryComplete(token: IMqttDeliveryToken?) {
-                TODO("Not yet implemented")
+                Log.i("Token MQTT", "$token")
             }
         })
         mqttRepository.subscribeTopics(topicsAlarm)
+    }
+
+    private fun showAlert(title: String, message: String){
+        MaterialAlertDialogBuilder(context!!)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("Ok") { dialog, which -> }
+            .show()
     }
 
     private fun configButtons() {
@@ -99,6 +113,7 @@ class HomeFragment: Fragment() {
                 show = false
                 Timer().schedule(700) {}
                 mqttRepository.publish("cmnd/alarme", "\"desarmado\"")
+                Toast.makeText(context, "Comando de Desarme enviado com sucesso.", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -110,6 +125,7 @@ class HomeFragment: Fragment() {
                 show = false
                 Timer().schedule(700) {}
                 mqttRepository.publish("cmnd/alarme", "\"armado\"")
+                Toast.makeText(context, "Comando de Arme enviado com sucesso.", Toast.LENGTH_SHORT).show()
             }
         }
     }

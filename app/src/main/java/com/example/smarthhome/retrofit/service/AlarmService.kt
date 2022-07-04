@@ -9,5 +9,9 @@ interface AlarmService {
 
     @Headers("Content-Type: application/json")
     @HTTP(method = "GET", path = "/status/all/alarm")
-    fun getAllStates(): Call<List<Status>>
+    fun getAllStatesHome(): Call<List<Status>>
+
+    @Headers("Content-Type: application/json")
+    @HTTP(method = "GET", path = "/status/all/automation")
+    fun getAllStatesAutomation(): Call<List<Status>>
 }

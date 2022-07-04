@@ -1,17 +1,16 @@
 package com.example.smarthhome.service
 
-import android.util.Log
-import android.view.View
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
-import android.view.animation.LinearInterpolator
-import android.widget.ImageView
-import androidx.fragment.app.Fragment
-import com.example.smarthhome.R
 import com.example.smarthhome.databinding.FragmentHomeBinding
+import android.view.animation.LinearInterpolator
+import android.view.animation.AlphaAnimation
 import com.example.smarthhome.model.Status
+import android.view.animation.Animation
+import com.example.smarthhome.R
+import android.widget.ImageView
+import android.view.View
+import android.util.Log
 
-class Alarm: Fragment(R.layout.fragment_home) {
+class Alarm{
 
     private lateinit var binding: FragmentHomeBinding
 
@@ -41,6 +40,10 @@ class Alarm: Fragment(R.layout.fragment_home) {
         binding.btnArm.visibility = View.GONE
         binding.txtArm.visibility = View.GONE
 
+        binding.btnVioled.visibility = View.GONE
+        binding.btnVioled.startAnimation(AlphaAnimation(0.0f, 0.0f))
+        binding.txtVioled.visibility = View.GONE
+
         binding.btnActiveArm.visibility = View.VISIBLE
         binding.txtActiveArm.visibility = View.VISIBLE
         binding.btnActiveDesarm.visibility = View.GONE
@@ -50,6 +53,11 @@ class Alarm: Fragment(R.layout.fragment_home) {
     private fun stateVioled() {
         Log.d("MQTT", "atualizando status alarme para DISPARADO")
 
+        binding.btnActiveArm.visibility = View.GONE
+        binding.txtActiveArm.visibility = View.GONE
+        binding.btnActiveDesarm.visibility = View.VISIBLE
+        binding.txtActiveDesarm.visibility = View.VISIBLE
+
         binding.btnArm.visibility = View.GONE
         binding.txtArm.visibility = View.GONE
         binding.btnVioled.visibility = View.VISIBLE
@@ -58,10 +66,28 @@ class Alarm: Fragment(R.layout.fragment_home) {
         binding.btnVioled.startAnimation(configAnimationVioled())
     }
 
-     fun disableDefault() {
+     fun disableIconsDefault() {
         binding.progressBarAlarm.visibility = View.GONE
         binding.btnDefault.visibility = View.GONE
         binding.txtDefault.visibility = View.GONE
+    }
+
+    fun enableIconsDefault(){
+        binding.btnArm.visibility = View.GONE
+        binding.txtArm.visibility = View.GONE
+
+        binding.btnDesarm.visibility = View.GONE
+        binding.txtDesarm.visibility = View.GONE
+
+        binding.btnVioled.visibility = View.GONE
+        binding.txtVioled.visibility = View.GONE
+
+        binding.btnDefault.visibility = View.VISIBLE
+        binding.txtDefault.visibility = View.VISIBLE
+
+        for(i in 1..4){
+            updateStateSensor(i, "default")
+        }
     }
 
     private fun configAnimationVioled(): AlphaAnimation {
@@ -80,7 +106,7 @@ class Alarm: Fragment(R.layout.fragment_home) {
             "\"fechado\"" -> imageView.setBackgroundResource(R.mipmap.img_setor_close)
             "aberto" -> imageView.setBackgroundResource(R.mipmap.img_setor_open)
             "\"aberto\"" -> imageView.setBackgroundResource(R.mipmap.img_setor_open)
-
+            "default" -> imageView.setBackgroundResource(R.mipmap.img_setor_default)
         }
     }
 
@@ -108,7 +134,6 @@ class Alarm: Fragment(R.layout.fragment_home) {
             3 -> stateSensor(binding.setor3ImgStatus, status)
             4 -> stateSensor(binding.setor4ImgStatus, status)
         }
-
     }
 
     fun updateStateAlarme(status: String) {

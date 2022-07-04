@@ -19,4 +19,5 @@
     <string name="icone_arme">Icone Arme</string>
     <string name="icone_violacao">Icone Violação</string>
     <string name="violed">Disparado</string>
+    <string name="text_iluminacao">Iluminação</string>
 </resources>
