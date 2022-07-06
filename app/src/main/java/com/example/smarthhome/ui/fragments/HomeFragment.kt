@@ -21,6 +21,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage
 import org.koin.android.ext.android.inject
 import java.util.*
 import kotlin.concurrent.schedule
+import com.example.smarthhome.constants.Constants.LIST_TOPIC_ALARM
 
 
 class HomeFragment: Fragment() {
@@ -35,7 +36,6 @@ class HomeFragment: Fragment() {
     private val mqttClient: MqttAndroidClient by inject()
     private val mqttRepository = MqttRepository(mqttClient)
 
-    private val topicsAlarm = mutableListOf("alarme", "setor1", "setor2", "setor3", "setor4")
     private var countMessage = 0
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -43,7 +43,7 @@ class HomeFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        alarmCmnd.setBinding(binding)
+        alarmCmnd.setConfigAlarm(binding, context!!)
         mqttConfig()
         configButtons()
         apiRepository.getCurrentStateHome(requireContext())
@@ -52,50 +52,13 @@ class HomeFragment: Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mqttRepository.unsubscribeTopics(topicsAlarm)
+        mqttRepository.unsubscribeTopics(LIST_TOPIC_ALARM)
         _binding = null
     }
 
     private fun mqttConfig() {
-        mqttClient.setCallback(object : MqttCallback {
-            override fun connectionLost(cause: Throwable?) {
-                TODO("Not yet implemented")
-            }
-
-            override fun messageArrived(topic: String?, message: MqttMessage?) {
-                countMessage += 1
-                Log.d(
-                    "MQTT",
-                    "Received message ${countMessage}: ${message.toString()} from topic: $topic"
-                )
-                val msg = message.toString()
-                when (topic) {
-                    "status/${topicsAlarm[0]}" -> alarmCmnd.updateStateAlarme(msg)
-                    "status/${topicsAlarm[1]}" -> alarmCmnd.updateStateSensor(1, msg)
-                    "status/${topicsAlarm[2]}" -> alarmCmnd.updateStateSensor(2, msg)
-                    "status/${topicsAlarm[3]}" -> alarmCmnd.updateStateSensor(3, msg)
-                    "status/${topicsAlarm[4]}" -> alarmCmnd.updateStateSensor(4, msg)
-                    "error/${topicsAlarm[0]}" -> {
-                        Log.i("MQTT", "Error alarme: $msg")
-                        showAlert("Erro ao enviar comando", msg)
-                    }
-                    else -> Log.d("MQTT", "Não foi possivel processar o STATUS")
-                }
-            }
-
-            override fun deliveryComplete(token: IMqttDeliveryToken?) {
-                Log.i("Token MQTT", "$token")
-            }
-        })
-        mqttRepository.subscribeTopics(topicsAlarm)
-    }
-
-    private fun showAlert(title: String, message: String){
-        MaterialAlertDialogBuilder(context!!)
-            .setTitle(title)
-            .setMessage(message)
-            .setPositiveButton("Ok") { dialog, which -> }
-            .show()
+        mqttRepository.setFragmentCallback(0)
+        mqttRepository.subscribeTopics(LIST_TOPIC_ALARM)
     }
 
     private fun configButtons() {

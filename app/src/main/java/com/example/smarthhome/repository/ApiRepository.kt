@@ -39,14 +39,14 @@ class ApiRepository {
 
         getAllResult.enqueue(object: Callback<List<Status>>{
             override fun onResponse(call: Call<List<Status>>, response: Response<List<Status>>) {
-                automationCmnd.disableDefaultView()
-                automationCmnd.updateAllStateAutomation(response.body())
                 val listStatus: List<Status> = response.body()!!
                 var count = 0
                 for(s in listStatus){
                     db.statusDAO.updateState(s.status, count)
                     count++
                 }
+                automationCmnd.disableDefaultView()
+                automationCmnd.updateAllStateAutomation(response.body())
             }
             override fun onFailure(call: Call<List<Status>>, t: Throwable) {
                 Toast.makeText(context, "ERRO AO CARREGAR STATUS",

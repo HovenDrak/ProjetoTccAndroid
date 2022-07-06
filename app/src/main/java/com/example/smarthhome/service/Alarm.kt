@@ -1,5 +1,6 @@
 package com.example.smarthhome.service
 
+import android.content.Context
 import com.example.smarthhome.databinding.FragmentHomeBinding
 import android.view.animation.LinearInterpolator
 import android.view.animation.AlphaAnimation
@@ -9,13 +10,16 @@ import com.example.smarthhome.R
 import android.widget.ImageView
 import android.view.View
 import android.util.Log
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class Alarm{
 
     private lateinit var binding: FragmentHomeBinding
+    private lateinit var context: Context
 
-    fun setBinding(binding: FragmentHomeBinding){
+    fun setConfigAlarm(binding: FragmentHomeBinding, context: Context){
         this.binding = binding
+        this.context = context
     }
 
     private fun stateArm() {
@@ -143,5 +147,13 @@ class Alarm{
             "\"armado\"" -> stateArm()
             "\"disparado\"" -> stateVioled()
         }
+    }
+
+    fun showAlert(title: String, message: String){
+        MaterialAlertDialogBuilder(context)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("Ok") { _, _ -> }
+            .show()
     }
 }

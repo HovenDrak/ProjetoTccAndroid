@@ -42,6 +42,17 @@ class Automation {
                 textView.text = "Desligado"
             }
             "ligado" -> {
+            cardView.setCardBackgroundColor(Color.parseColor("#FFFFFF"))
+            imageButton.setBackgroundResource(R.drawable.light_on)
+            textView.text = "Ligado"
+            }
+            "\"desligado\"" -> {
+                cardView.setCardBackgroundColor(Color.parseColor("#DCDCDC"))
+                imageButton.setBackgroundResource(R.drawable.light_off)
+                textView.text = "Desligado"
+            }
+
+            "\"ligado\"" -> {
                 cardView.setCardBackgroundColor(Color.parseColor("#FFFFFF"))
                 imageButton.setBackgroundResource(R.drawable.light_on)
                 textView.text = "Ligado"
