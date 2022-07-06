@@ -2,9 +2,9 @@ package com.example.smarthhome.repository
 
 import android.content.Context
 import android.widget.Toast
+import com.example.smarthhome.constants.Constants.ERROR_LOAD_STATE_API
 import com.example.smarthhome.database.AppDatabase
 import com.example.smarthhome.model.Status
-import com.example.smarthhome.model.StatusDB
 import com.example.smarthhome.retrofit.ServiceBuilderApi
 import com.example.smarthhome.service.Alarm
 import com.example.smarthhome.service.Automation
@@ -14,9 +14,9 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class ApiRepository {
-    private val alarmCmnd: Alarm by inject(Alarm::class.java)
     private val automationCmnd: Automation by inject(Automation::class.java)
     private val db: AppDatabase by inject(AppDatabase::class.java)
+    private val alarmCmnd: Alarm by inject(Alarm::class.java)
     private val api = ServiceBuilderApi()
 
     fun getCurrentStateHome(context: Context){
@@ -28,8 +28,7 @@ class ApiRepository {
                 alarmCmnd.updateAllStateAlarm(response.body())
             }
             override fun onFailure(call: Call<List<Status>>, t: Throwable) {
-                Toast.makeText(context, "ERRO AO CARREGAR STATUS",
-                    Toast.LENGTH_LONG).show()
+                Toast.makeText(context, ERROR_LOAD_STATE_API, Toast.LENGTH_LONG).show()
             }
         })
     }
@@ -40,17 +39,14 @@ class ApiRepository {
         getAllResult.enqueue(object: Callback<List<Status>>{
             override fun onResponse(call: Call<List<Status>>, response: Response<List<Status>>) {
                 val listStatus: List<Status> = response.body()!!
-                var count = 0
-                for(s in listStatus){
+                for((count, s) in listStatus.withIndex()){
                     db.statusDAO.updateState(s.status, count)
-                    count++
                 }
                 automationCmnd.disableDefaultView()
-                automationCmnd.updateAllStateAutomation(response.body())
+                automationCmnd.updateAllStateAutomation(listStatus)
             }
             override fun onFailure(call: Call<List<Status>>, t: Throwable) {
-                Toast.makeText(context, "ERRO AO CARREGAR STATUS",
-                    Toast.LENGTH_LONG).show()
+                Toast.makeText(context, ERROR_LOAD_STATE_API, Toast.LENGTH_LONG).show()
             }
         })
     }

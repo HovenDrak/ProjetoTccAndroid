@@ -29,14 +29,12 @@ class HomeFragment: Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val apiRepository = ApiRepository()
-    private val alarmCmnd: Alarm by inject()
-    private var show = false
-
     private val mqttClient: MqttAndroidClient by inject()
-    private val mqttRepository = MqttRepository(mqttClient)
+    private val alarmCmnd: Alarm by inject()
 
-    private var countMessage = 0
+    private val mqttRepository = MqttRepository(mqttClient)
+    private val apiRepository = ApiRepository()
+    private var show = false
 
     override fun onCreateView(inflater: LayoutInflater,
         container: ViewGroup?,
@@ -74,7 +72,6 @@ class HomeFragment: Fragment() {
             if(show) {
                 runAnimation(R.anim.animation_up, R.anim.animation_move_up, View.GONE)
                 show = false
-                Timer().schedule(700) {}
                 mqttRepository.publish("cmnd/alarme", "\"desarmado\"")
                 Toast.makeText(context, "Comando de Desarme enviado com sucesso.", Toast.LENGTH_SHORT).show()
             }
@@ -86,47 +83,38 @@ class HomeFragment: Fragment() {
             if(show) {
                 runAnimation(R.anim.animation_up, R.anim.animation_move_up, View.GONE)
                 show = false
-                Timer().schedule(700) {}
                 mqttRepository.publish("cmnd/alarme", "\"armado\"")
                 Toast.makeText(context, "Comando de Arme enviado com sucesso.", Toast.LENGTH_SHORT).show()
             }
         }
     }
     private fun configButtonVioled(){
-        binding.btnVioled.setOnClickListener{
-            show = configAnimation()
-        }
+        binding.btnVioled.setOnClickListener{ show = configAnimation() }
     }
 
     private fun configButtonArm() {
-        binding.btnArm.setOnClickListener{
-            show = configAnimation()
-        }
+        binding.btnArm.setOnClickListener{ show = configAnimation() }
     }
 
     private fun configButtonDesarm() {
-        binding.btnDesarm.setOnClickListener{
-            show = configAnimation()
-        }
+        binding.btnDesarm.setOnClickListener{ show = configAnimation() }
     }
 
-    private fun configAnimation() = if (!show) {
+    private fun configAnimation() =
+        if (!show) {
         runAnimation(R.anim.animation_down, R.anim.animation_move_down, View.VISIBLE)
         true
-    } else {
-        runAnimation(R.anim.animation_up, R.anim.animation_move_up, View.GONE)
-        false
-    }
+        } else {
+            runAnimation(R.anim.animation_up, R.anim.animation_move_up, View.GONE)
+            false
+        }
 
     private fun runAnimation(animationCommand: Int, animationStatus: Int, visible: Int) {
-        binding
-            .materialCardViewComand
+        binding.materialCardViewComand
             .startAnimation(AnimationUtils.loadAnimation(context, animationCommand))
-        binding
-            .materialCardViewComand
+        binding.materialCardViewComand
             .visibility = visible
-        binding
-            .materialCardViewSensors
+        binding.materialCardViewSensors
             .startAnimation(AnimationUtils.loadAnimation(context, animationStatus))
     }
 }

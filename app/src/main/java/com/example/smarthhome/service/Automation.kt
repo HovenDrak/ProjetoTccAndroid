@@ -9,6 +9,12 @@ import androidx.cardview.widget.CardView
 import com.example.smarthhome.R
 import com.example.smarthhome.databinding.FragmentAutomationBinding
 import com.example.smarthhome.model.Status
+import com.example.smarthhome.constants.Constants.CMND_LIGHT_OFF
+import com.example.smarthhome.constants.Constants.CMND_LIGHT_OFFLINE
+import com.example.smarthhome.constants.Constants.CMND_LIGHT_ON
+import com.example.smarthhome.constants.Constants.CMND_MQTT_LIGHT_OFF
+import com.example.smarthhome.constants.Constants.CMND_MQTT_LIGHT_ON
+
 
 class Automation {
 
@@ -31,28 +37,28 @@ class Automation {
 
     private fun updateStateLight(cardView: CardView, textView: TextView, imageButton: ImageButton, state: String){
         when(state){
-            "Offline" -> {
+            CMND_LIGHT_OFFLINE -> {
                 cardView.setCardBackgroundColor(Color.parseColor("#7B7B7B"))
                 imageButton.setBackgroundResource(R.drawable.light_off)
                 textView.text = "Offline"
             }
-            "desligado" -> {
+            CMND_LIGHT_OFF -> {
                 cardView.setCardBackgroundColor(Color.parseColor("#DCDCDC"))
                 imageButton.setBackgroundResource(R.drawable.light_off)
                 textView.text = "Desligado"
             }
-            "ligado" -> {
+            CMND_LIGHT_ON -> {
             cardView.setCardBackgroundColor(Color.parseColor("#FFFFFF"))
             imageButton.setBackgroundResource(R.drawable.light_on)
             textView.text = "Ligado"
             }
-            "\"desligado\"" -> {
+            CMND_MQTT_LIGHT_OFF -> {
                 cardView.setCardBackgroundColor(Color.parseColor("#DCDCDC"))
                 imageButton.setBackgroundResource(R.drawable.light_off)
                 textView.text = "Desligado"
             }
 
-            "\"ligado\"" -> {
+            CMND_MQTT_LIGHT_ON -> {
                 cardView.setCardBackgroundColor(Color.parseColor("#FFFFFF"))
                 imageButton.setBackgroundResource(R.drawable.light_on)
                 textView.text = "Ligado"

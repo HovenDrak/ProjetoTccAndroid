@@ -1,9 +1,11 @@
 package com.example.smarthhome.repository
 
 import android.util.Log
+import com.example.smarthhome.constants.Constants.ERROR_LOAD_STATE_MQTT
+import com.example.smarthhome.constants.Constants.ERROR_SEND_CMND
 import com.example.smarthhome.constants.Constants.LIST_TOPIC_ALARM
 import com.example.smarthhome.constants.Constants.LIST_TOPIC_LIGHT
-import com.example.smarthhome.constants.Constants.PASS_MQTT
+import com.example.smarthhome.constants.Constants.PASSWORD_MQTT
 import com.example.smarthhome.constants.Constants.TAG_MQTT
 import com.example.smarthhome.constants.Constants.USER_MQTT
 import com.example.smarthhome.database.AppDatabase
@@ -11,7 +13,6 @@ import com.example.smarthhome.service.Alarm
 import com.example.smarthhome.service.Automation
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
-import org.koin.android.ext.android.inject
 import org.koin.java.KoinJavaComponent.inject
 
 class MqttRepository(private val mqttClient: MqttAndroidClient) {
@@ -19,7 +20,6 @@ class MqttRepository(private val mqttClient: MqttAndroidClient) {
     private val automationCmnd: Automation by inject(Automation::class.java)
     private val alarmCmnd: Alarm by inject(Alarm::class.java)
     private val db: AppDatabase by inject(AppDatabase::class.java)
-
 
     private var countMessageAutomation = 0
     private var countMessageAlarm = 0
@@ -29,7 +29,7 @@ class MqttRepository(private val mqttClient: MqttAndroidClient) {
             mqttClient.connect(setMqttAuthentication(), null, object : IMqttActionListener {
                 override fun onSuccess(asyncActionToken: IMqttToken?) {
                     Log.d(TAG_MQTT, "Connection success")
-                    subscribeInitialTopics()
+                    subscribeTopics(LIST_TOPIC_ALARM)
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
@@ -44,13 +44,8 @@ class MqttRepository(private val mqttClient: MqttAndroidClient) {
     private fun setMqttAuthentication(): MqttConnectOptions {
         val options = MqttConnectOptions()
         options.userName = USER_MQTT
-        options.password = PASS_MQTT.toCharArray()
+        options.password = PASSWORD_MQTT.toCharArray()
         return options
-    }
-
-    private fun subscribeInitialTopics() {
-        subscribeTopics(LIST_TOPIC_ALARM)
-        subscribe("error/alarme")
     }
 
     fun subscribeTopics(topics: List<String>) {
@@ -63,7 +58,6 @@ class MqttRepository(private val mqttClient: MqttAndroidClient) {
         for(i in topics){
             unsubscribe("status/$i")
         }
-        unsubscribe("error/alarme")
     }
 
     fun setFragmentCallback(option: Int){
@@ -75,13 +69,14 @@ class MqttRepository(private val mqttClient: MqttAndroidClient) {
 
     private val callbackAutomation = object: MqttCallback {
         override fun connectionLost(cause: Throwable?) {
-            TODO("Not yet implemented")
+            Log.e(TAG_MQTT, "Connection MQTT lost cause: $cause")
+            connectMqtt()
         }
 
         override fun messageArrived(topic: String?, message: MqttMessage?) {
             countMessageAlarm += 1
-            Log.d(
-                TAG_MQTT, "Received message ${countMessageAlarm}: ${message.toString()} from topic: $topic"
+            Log.d(TAG_MQTT,
+                "Received message ${countMessageAutomation}: ${message.toString()} from topic: $topic"
             )
             val msg = message.toString()
             when (topic) {
@@ -101,7 +96,7 @@ class MqttRepository(private val mqttClient: MqttAndroidClient) {
                     automationCmnd.updateStateLight(4, msg)
                     db.statusDAO.updateState(msg.replace("\"", ""), 4)
                 }
-                else -> Log.d(TAG_MQTT, "Não foi possivel processar o STATUS")
+                else -> Log.d(TAG_MQTT, ERROR_LOAD_STATE_MQTT)
             }
         }
         override fun deliveryComplete(token: IMqttDeliveryToken?) {
@@ -111,7 +106,8 @@ class MqttRepository(private val mqttClient: MqttAndroidClient) {
 
     private val callbackAlarm = object: MqttCallback {
         override fun connectionLost(cause: Throwable?) {
-            TODO("Not yet implemented")
+            Log.e(TAG_MQTT, "Connection MQTT lost cause: $cause")
+            connectMqtt()
         }
 
         override fun messageArrived(topic: String?, message: MqttMessage?) {
@@ -126,11 +122,10 @@ class MqttRepository(private val mqttClient: MqttAndroidClient) {
                 "status/${LIST_TOPIC_ALARM[2]}" -> alarmCmnd.updateStateSensor(2, msg)
                 "status/${LIST_TOPIC_ALARM[3]}" -> alarmCmnd.updateStateSensor(3, msg)
                 "status/${LIST_TOPIC_ALARM[4]}" -> alarmCmnd.updateStateSensor(4, msg)
-                "error/${LIST_TOPIC_ALARM[0]}" -> {
+                "error/${LIST_TOPIC_ALARM[0]}" -> { alarmCmnd.showAlert(ERROR_SEND_CMND, msg)
                     Log.i(TAG_MQTT, "Error alarme: $msg")
-                    alarmCmnd.showAlert("Erro ao enviar comando", msg)
                 }
-                else -> Log.d(TAG_MQTT, "Não foi possivel processar o STATUS")
+                else -> Log.d(TAG_MQTT, ERROR_LOAD_STATE_MQTT)
             }
         }
         override fun deliveryComplete(token: IMqttDeliveryToken?) {
