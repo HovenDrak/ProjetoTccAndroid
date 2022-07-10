@@ -1,27 +1,25 @@
-package com.example.smarthhome.ui.fragments
+package com.example.smarthhome.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.view.animation.Transformation
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.smarthhome.R
+import com.example.smarthhome.constants.Constants.LIST_TOPIC_ALARM
+import com.example.smarthhome.constants.Constants.CMND_MQTT_DISARM
+import com.example.smarthhome.constants.Constants.TOPIC_CMND_ALARM
+import com.example.smarthhome.constants.Constants.CMND_MQTT_ARM
 import com.example.smarthhome.databinding.FragmentHomeBinding
 import com.example.smarthhome.repository.ApiRepository
 import com.example.smarthhome.repository.MqttRepository
 import com.example.smarthhome.service.Alarm
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.eclipse.paho.android.service.MqttAndroidClient
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
-import org.eclipse.paho.client.mqttv3.MqttCallback
-import org.eclipse.paho.client.mqttv3.MqttMessage
 import org.koin.android.ext.android.inject
-import java.util.*
-import kotlin.concurrent.schedule
-import com.example.smarthhome.constants.Constants.LIST_TOPIC_ALARM
 
 
 class HomeFragment: Fragment() {
@@ -37,8 +35,8 @@ class HomeFragment: Fragment() {
     private var show = false
 
     override fun onCreateView(inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+                              container: ViewGroup?,
+                              savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         alarmCmnd.setConfigAlarm(binding, context!!)
@@ -52,6 +50,12 @@ class HomeFragment: Fragment() {
         super.onDestroyView()
         mqttRepository.unsubscribeTopics(LIST_TOPIC_ALARM)
         _binding = null
+        show = false
+    }
+
+    override fun onResume() {
+        super.onResume()
+        show = false
     }
 
     private fun mqttConfig() {
@@ -60,19 +64,20 @@ class HomeFragment: Fragment() {
     }
 
     private fun configButtons() {
-        configButtonDesarm()
-        configButtonArm()
-        configButtonVioled()
-        configButtonActiveDesarm()
+        configButtonActiveDisarm()
         configButtonActiveArm()
+        configButtonVioled()
+        configButtonDisarm()
+        configButtonArm()
     }
 
-    private fun configButtonActiveDesarm() {
+    private fun configButtonActiveDisarm() {
         binding.btnActiveDesarm.setOnClickListener{
             if(show) {
-                runAnimation(R.anim.animation_up, R.anim.animation_move_up, View.GONE)
+                runAnimation(R.anim.animation_move_up, false)
+                sendCommand(CMND_MQTT_DISARM)
+                animationSendCmnd(false)
                 show = false
-                mqttRepository.publish("cmnd/alarme", "\"desarmado\"")
                 Toast.makeText(context, "Comando de Desarme enviado com sucesso.", Toast.LENGTH_SHORT).show()
             }
         }
@@ -81,13 +86,15 @@ class HomeFragment: Fragment() {
     private fun configButtonActiveArm() {
         binding.btnActiveArm.setOnClickListener{
             if(show) {
-                runAnimation(R.anim.animation_up, R.anim.animation_move_up, View.GONE)
+                runAnimation(R.anim.animation_move_up, false)
+                sendCommand(CMND_MQTT_ARM)
+                animationSendCmnd(true)
                 show = false
-                mqttRepository.publish("cmnd/alarme", "\"armado\"")
                 Toast.makeText(context, "Comando de Arme enviado com sucesso.", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
     private fun configButtonVioled(){
         binding.btnVioled.setOnClickListener{ show = configAnimation() }
     }
@@ -96,25 +103,51 @@ class HomeFragment: Fragment() {
         binding.btnArm.setOnClickListener{ show = configAnimation() }
     }
 
-    private fun configButtonDesarm() {
-        binding.btnDesarm.setOnClickListener{ show = configAnimation() }
+    private fun configButtonDisarm() {
+        binding.btnDisarm.setOnClickListener{ show = configAnimation() }
     }
 
     private fun configAnimation() =
         if (!show) {
-        runAnimation(R.anim.animation_down, R.anim.animation_move_down, View.VISIBLE)
-        true
+            runAnimation(R.anim.animation_move_down, true)
+            true
         } else {
-            runAnimation(R.anim.animation_up, R.anim.animation_move_up, View.GONE)
+            runAnimation(R.anim.animation_move_up, false)
             false
         }
 
-    private fun runAnimation(animationCommand: Int, animationStatus: Int, visible: Int) {
-        binding.materialCardViewComand
-            .startAnimation(AnimationUtils.loadAnimation(context, animationCommand))
-        binding.materialCardViewComand
-            .visibility = visible
+    private fun sendCommand(cmnd: String){
+        mqttRepository.publish(TOPIC_CMND_ALARM, cmnd)
+    }
+
+    private fun runAnimation(animationStatus: Int, visible: Boolean) {
+        var count = 1.0
+        val animation: Animation = object : Animation() {
+            override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
+                if(visible){
+                    binding.constraintCommand.layoutParams.height = (340 * interpolatedTime).toInt()
+                } else{
+                    binding.constraintCommand.layoutParams.height = (340/(interpolatedTime + count)).toInt()
+                    count += 0.5
+                }
+                binding.constraintCommand.requestLayout()
+            }
+        }
+        animation.duration = 500
+        binding.constraintCommand.startAnimation(animation)
+
         binding.materialCardViewSensors
             .startAnimation(AnimationUtils.loadAnimation(context, animationStatus))
+    }
+
+    private fun animationSendCmnd(cmndArm: Boolean){
+        if(cmndArm){
+            binding.btnDisarm.startAnimation(alarmCmnd.configAlphaAnimation(false))
+        }else{
+            if(binding.btnVioled.visibility == View.GONE) {
+                binding.btnArm.startAnimation(alarmCmnd.configAlphaAnimation(false))
+            }
+        }
+
     }
 }

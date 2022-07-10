@@ -5,6 +5,18 @@ import com.example.smarthhome.databinding.FragmentHomeBinding
 import android.view.animation.LinearInterpolator
 import android.view.animation.AlphaAnimation
 import com.example.smarthhome.model.Status
+import com.example.smarthhome.constants.Constants.TAG_MQTT
+import com.example.smarthhome.constants.Constants.CMND_MQTT_SENSOR_CLOSE
+import com.example.smarthhome.constants.Constants.CMND_MQTT_SENSOR_OPEN
+import com.example.smarthhome.constants.Constants.CMND_API_SENSOR_CLOSE
+import com.example.smarthhome.constants.Constants.CMND_API_SENSOR_OPEN
+import com.example.smarthhome.constants.Constants.CMND_SENSOR_DEFAULT
+import com.example.smarthhome.constants.Constants.CMND_MQTT_ARM
+import com.example.smarthhome.constants.Constants.CMND_MQTT_DISARM
+import com.example.smarthhome.constants.Constants.CMND_MQTT_VIOLED
+import com.example.smarthhome.constants.Constants.CMND_API_ARM
+import com.example.smarthhome.constants.Constants.CMND_API_DISARM
+import com.example.smarthhome.constants.Constants.CMND_API_VIOLED
 import android.view.animation.Animation
 import com.example.smarthhome.R
 import android.widget.ImageView
@@ -23,10 +35,11 @@ class Alarm{
     }
 
     private fun stateArm() {
-        Log.d("MQTT", "atualizando status alarme para ARMADO")
 
-        binding.btnDesarm.visibility = View.GONE
+        binding.btnDisarm.startAnimation(AlphaAnimation(0.0f, 0.0f))
+        binding.btnDisarm.visibility = View.GONE
         binding.txtDesarm.visibility = View.GONE
+
         binding.btnArm.visibility = View.VISIBLE
         binding.txtArm.visibility = View.VISIBLE
 
@@ -37,15 +50,16 @@ class Alarm{
     }
 
     private fun stateDisarm() {
-        Log.d("MQTT", "atualizando status alarme para DESARMADO")
 
-        binding.btnDesarm.visibility = View.VISIBLE
+        binding.btnDisarm.visibility = View.VISIBLE
         binding.txtDesarm.visibility = View.VISIBLE
+
+        binding.btnArm.startAnimation(AlphaAnimation(0.0f, 0.0f))
         binding.btnArm.visibility = View.GONE
         binding.txtArm.visibility = View.GONE
 
-        binding.btnVioled.visibility = View.GONE
         binding.btnVioled.startAnimation(AlphaAnimation(0.0f, 0.0f))
+        binding.btnVioled.visibility = View.GONE
         binding.txtVioled.visibility = View.GONE
 
         binding.btnActiveArm.visibility = View.VISIBLE
@@ -55,7 +69,6 @@ class Alarm{
     }
 
     private fun stateVioled() {
-        Log.d("MQTT", "atualizando status alarme para DISPARADO")
 
         binding.btnActiveArm.visibility = View.GONE
         binding.txtActiveArm.visibility = View.GONE
@@ -67,7 +80,7 @@ class Alarm{
         binding.btnVioled.visibility = View.VISIBLE
         binding.txtVioled.visibility = View.VISIBLE
 
-        binding.btnVioled.startAnimation(configAnimationVioled())
+        binding.btnVioled.startAnimation(configAlphaAnimation(true))
     }
 
      fun disableIconsDefault() {
@@ -80,7 +93,7 @@ class Alarm{
         binding.btnArm.visibility = View.GONE
         binding.txtArm.visibility = View.GONE
 
-        binding.btnDesarm.visibility = View.GONE
+        binding.btnDisarm.visibility = View.GONE
         binding.txtDesarm.visibility = View.GONE
 
         binding.btnVioled.visibility = View.GONE
@@ -90,35 +103,38 @@ class Alarm{
         binding.txtDefault.visibility = View.VISIBLE
 
         for(i in 1..4){
-            updateStateSensor(i, "default")
+            updateStateSensor(i, CMND_SENSOR_DEFAULT)
         }
     }
 
-    private fun configAnimationVioled(): AlphaAnimation {
-        val animationVioled = AlphaAnimation(1.0f, 0.0f)
-        animationVioled.duration = 500
-        animationVioled.interpolator = LinearInterpolator()
-        animationVioled.repeatCount = Animation.INFINITE
-        animationVioled.repeatMode = Animation.REVERSE
-        return animationVioled
+     fun configAlphaAnimation(violed: Boolean): AlphaAnimation {
+         val alphaAnimation: AlphaAnimation = if (violed){
+             AlphaAnimation(1.0f, 0.0f)
+         } else{
+             AlphaAnimation(1.0f, 0.2f)
+         }
+        alphaAnimation.duration = 500
+        alphaAnimation.interpolator = LinearInterpolator()
+        alphaAnimation.repeatCount = Animation.INFINITE
+        alphaAnimation.repeatMode = Animation.REVERSE
+        return alphaAnimation
     }
 
     private fun stateSensor(imageView: ImageView, status: String) {
-        Log.d("MQTT", "atualizando status para $status")
         when (status) {
-            "fechado" -> imageView.setBackgroundResource(R.mipmap.img_setor_close)
-            "\"fechado\"" -> imageView.setBackgroundResource(R.mipmap.img_setor_close)
-            "aberto" -> imageView.setBackgroundResource(R.mipmap.img_setor_open)
-            "\"aberto\"" -> imageView.setBackgroundResource(R.mipmap.img_setor_open)
-            "default" -> imageView.setBackgroundResource(R.mipmap.img_setor_default)
+            CMND_MQTT_SENSOR_CLOSE -> imageView.setBackgroundResource(R.drawable.img_sensor_default)
+            CMND_MQTT_SENSOR_OPEN -> imageView.setBackgroundResource(R.drawable.img_sensor_open)
+            CMND_API_SENSOR_CLOSE -> imageView.setBackgroundResource(R.drawable.img_sensor_default)
+            CMND_API_SENSOR_OPEN -> imageView.setBackgroundResource(R.drawable.img_sensor_open)
+            CMND_SENSOR_DEFAULT -> imageView.setBackgroundResource(R.drawable.img_sensor_default)
         }
     }
 
     fun updateAllStateAlarm(list: List<Status>?) {
         when (list!![0].status) {
-            "desarmado" -> stateDisarm()
-            "armado" -> stateArm()
-            "disparado" -> stateVioled()
+            CMND_API_VIOLED -> stateVioled()
+            CMND_API_DISARM -> stateDisarm()
+            CMND_API_ARM -> stateArm()
         }
         for (i in 1..5) {
             when (i) {
@@ -131,7 +147,7 @@ class Alarm{
     }
 
     fun updateStateSensor(setor: Int, status: String) {
-        Log.i("MQTT", "atualizando status setor $setor")
+        Log.i(TAG_MQTT, "update sensor $setor for status $status")
         when (setor) {
             1 -> stateSensor(binding.setor1ImgStatus, status)
             2 -> stateSensor(binding.setor2ImgStatus, status)
@@ -140,12 +156,12 @@ class Alarm{
         }
     }
 
-    fun updateStateAlarme(status: String) {
-        Log.d("MQTT", "atualizando status ALARME para $status")
+    fun updateStateAlarm(status: String) {
+        Log.d(TAG_MQTT, "update alarm for status $status")
         when (status) {
-            "\"desarmado\"" -> stateDisarm()
-            "\"armado\"" -> stateArm()
-            "\"disparado\"" -> stateVioled()
+            CMND_MQTT_VIOLED -> stateVioled()
+            CMND_MQTT_DISARM -> stateDisarm()
+            CMND_MQTT_ARM -> stateArm()
         }
     }
 

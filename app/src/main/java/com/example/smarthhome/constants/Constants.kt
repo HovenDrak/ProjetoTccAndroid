@@ -12,19 +12,50 @@ object Constants{
 
     // -------------------- MQTT CONSTANTS ALARM --------------------//
     val LIST_TOPIC_ALARM = listOf("alarme", "setor1", "setor2", "setor3", "setor4", "error/alarme")
+    const val TOPIC_CMND_ALARM = "cmnd/alarme"
+
+    const val CMND_MQTT_SENSOR_CLOSE = "\"fechado\""
+    const val CMND_MQTT_SENSOR_OPEN = "\"aberto\""
+
+    const val CMND_API_SENSOR_CLOSE = "fechado"
+    const val CMND_API_SENSOR_OPEN = "aberto"
+
+    const val CMND_SENSOR_DEFAULT = "offline"
+
+    const val CMND_MQTT_VIOLED = "\"disparado\""
+    const val CMND_MQTT_DISARM = "\"desarmado\""
+    const val CMND_MQTT_ARM = "\"armado\""
+
+    const val CMND_API_VIOLED = "disparado"
+    const val CMND_API_DISARM = "desarmado"
+    const val CMND_API_ARM = "armado"
 
     // -------------------- MQTT CONSTANTS AUTOMATION --------------------//
     val LIST_TOPIC_LIGHT = listOf("light1", "light2", "light3", "light4")
+
     const val CMND_MQTT_LIGHT_OFF = "\"desligado\""
     const val CMND_MQTT_LIGHT_ON = "\"ligado\""
+
     const val CMND_LIGHT_OFFLINE = "offline"
     const val CMND_LIGHT_OFF = "desligado"
     const val CMND_LIGHT_ON = "ligado"
 
-    // -------------------- MQTT CONSTANTS GENERAL --------------------//
+    const val BACKGROUND_COLOR_LIGHT_OFFLINE ="#7B7B7B"
+    const val BACKGROUND_COLOR_LIGHT_OFF = "#DCDCDC"
+    const val BACKGROUND_COLOR_LIGHT_ON = "#FFFFFF"
+
+    const val TEXT_LIGHT_OFFLINE = "Offline"
+    const val TEXT_LIGHT_OFF = "Desligado"
+    const val TEXT_LIGHT_ON = "Ligado"
+
+    // -------------------- CONSTANTS GENERAL --------------------//
+    const val HOST_API = "https://api-tcc-oficial.herokuapp.com"
+    const val PATH_API_AUTOMATION = "/status/all/automation"
+    const val PATH_API_HOME = "/status/all/alarm"
+
     const val HOST_MQTT = "ssl://bbfb08f6f1b84ffebf8b0c4fbbcd0e90.s1.eu.hivemq.cloud:8883"
+    const val CLIENT_ID_MQTT = "android_client"
     const val PASSWORD_MQTT = "67UserAndroid67"
-    const val CLIENTID_MQTT = "android_client"
     const val USER_MQTT = "userAndroid"
     const val TAG_MQTT = "MQTT"
 

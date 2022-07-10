@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package com.example.smarthhome.ui
+package com.example.smarthhome.ui.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment
 import com.example.smarthhome.R
 import com.example.smarthhome.databinding.ActivityMainBinding
 import com.example.smarthhome.repository.MqttRepository
-import com.example.smarthhome.ui.fragments.AutomationFragment
-import com.example.smarthhome.ui.fragments.HomeFragment
+import com.example.smarthhome.ui.fragment.AutomationFragment
+import com.example.smarthhome.ui.fragment.HomeFragment
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.koin.android.ext.android.inject
 
@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
     private fun configNavigation() {
         binding.navigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.home -> replaceFragment(homeFragment)
+                R.id.txtHome -> replaceFragment(homeFragment)
                 R.id.automation -> replaceFragment(automationFragment)
             }
             return@setOnNavigationItemSelectedListener true

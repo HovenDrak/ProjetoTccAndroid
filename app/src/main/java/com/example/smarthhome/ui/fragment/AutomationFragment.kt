@@ -1,10 +1,11 @@
-package com.example.smarthhome.ui.fragments
+package com.example.smarthhome.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.smarthhome.R
 import com.example.smarthhome.constants.Constants.CMND_LIGHT_OFF
@@ -25,14 +26,14 @@ class AutomationFragment : Fragment() {
     private var _binding: FragmentAutomationBinding? = null
     private val binding get() = _binding!!
 
-    private val mqttCliente: MqttAndroidClient by inject()
+    private val mqttClient: MqttAndroidClient by inject()
     private val automationCmnd: Automation by inject()
     private val db: AppDatabase by inject()
 
-    private val mqttRepository = MqttRepository(mqttCliente)
+    private val mqttRepository = MqttRepository(mqttClient)
     private val apiRepository = ApiRepository()
 
-    var listStatus: List<StatusDB> = listOf()
+    private var listStatus: List<StatusDB> = listOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +47,12 @@ class AutomationFragment : Fragment() {
         return binding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mqttRepository.unsubscribeTopics(LIST_TOPIC_LIGHT)
+        _binding = null
+    }
+
     private fun mqttConfig() {
         mqttRepository.setFragmentCallback(1)
         mqttRepository.subscribeTopics(LIST_TOPIC_LIGHT)
@@ -55,31 +62,26 @@ class AutomationFragment : Fragment() {
         binding.btnLight1.setOnClickListener {
             listStatus = db.statusDAO.consultAllState()
             animationBounce(binding.cardMaterialLamp1)
-            sendComand(1, LIST_TOPIC_LIGHT[0])
+            sendCmnd(1, LIST_TOPIC_LIGHT[0])
         }
 
         binding.btnLight2.setOnClickListener {
             listStatus = db.statusDAO.consultAllState()
             animationBounce(binding.cardMaterialLamp2)
-            sendComand(2, LIST_TOPIC_LIGHT[1])
+            sendCmnd(2, LIST_TOPIC_LIGHT[1])
         }
 
         binding.btnLight3.setOnClickListener {
             listStatus = db.statusDAO.consultAllState()
             animationBounce(binding.cardMaterialLamp3)
-            sendComand(3, LIST_TOPIC_LIGHT[2])
+            sendCmnd(3, LIST_TOPIC_LIGHT[2])
         }
 
         binding.btnLight4.setOnClickListener {
             listStatus = db.statusDAO.consultAllState()
             animationBounce(binding.cardMaterialLamp4)
-            sendComand(4, LIST_TOPIC_LIGHT[3])
+            sendCmnd(4, LIST_TOPIC_LIGHT[3])
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun animationBounce(materialCardView: MaterialCardView){
@@ -87,11 +89,23 @@ class AutomationFragment : Fragment() {
             .loadAnimation(this.context, R.anim.bounce))
     }
 
-    private fun sendComand(state: Int, topicLight: String){
-        if(listStatus[state].status == CMND_LIGHT_ON){
+    private fun sendCmnd(light: Int, topicLight: String){
+        if(listStatus[light].status == CMND_LIGHT_ON){
             mqttRepository.publish("cmnd/$topicLight", CMND_LIGHT_OFF)
-        } else if(listStatus[state].status == CMND_LIGHT_OFF){
+            Toast.makeText(context, "Comando enviado com sucesso.", Toast.LENGTH_SHORT).show()
+        } else if(listStatus[light].status == CMND_LIGHT_OFF){
             mqttRepository.publish("cmnd/$topicLight", CMND_LIGHT_ON)
+            Toast.makeText(context, "Comando enviado com sucesso.", Toast.LENGTH_SHORT).show()
+        }
+        animationSendCmnd(light)
+    }
+    
+    private fun animationSendCmnd(light: Int){
+        when(light){
+            1 -> binding.btnLight1.startAnimation(automationCmnd.configAlphaAnimation())
+            2 -> binding.btnLight2.startAnimation(automationCmnd.configAlphaAnimation())
+            3 -> binding.btnLight3.startAnimation(automationCmnd.configAlphaAnimation())
+            4 -> binding.btnLight4.startAnimation(automationCmnd.configAlphaAnimation())
         }
     }
 }

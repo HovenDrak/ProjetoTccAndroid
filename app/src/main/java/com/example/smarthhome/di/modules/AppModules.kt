@@ -1,7 +1,7 @@
 package com.example.smarthhome.di.modules
 
 import androidx.room.Room
-import com.example.smarthhome.constants.Constants.CLIENTID_MQTT
+import com.example.smarthhome.constants.Constants.CLIENT_ID_MQTT
 import com.example.smarthhome.constants.Constants.HOST_MQTT
 import com.example.smarthhome.constants.Constants.NAME_DATABASE
 import com.example.smarthhome.database.AppDatabase
@@ -16,7 +16,7 @@ val appModules = module {
             MqttAndroidClient(
                 get(),
                 HOST_MQTT,
-                CLIENTID_MQTT)
+                CLIENT_ID_MQTT)
     }
 
     single<AppDatabase> {

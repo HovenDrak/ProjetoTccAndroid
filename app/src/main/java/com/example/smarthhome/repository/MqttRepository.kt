@@ -117,13 +117,13 @@ class MqttRepository(private val mqttClient: MqttAndroidClient) {
             )
             val msg = message.toString()
             when (topic) {
-                "status/${LIST_TOPIC_ALARM[0]}" -> alarmCmnd.updateStateAlarme(msg)
+                "status/${LIST_TOPIC_ALARM[0]}" -> alarmCmnd.updateStateAlarm(msg)
                 "status/${LIST_TOPIC_ALARM[1]}" -> alarmCmnd.updateStateSensor(1, msg)
                 "status/${LIST_TOPIC_ALARM[2]}" -> alarmCmnd.updateStateSensor(2, msg)
                 "status/${LIST_TOPIC_ALARM[3]}" -> alarmCmnd.updateStateSensor(3, msg)
                 "status/${LIST_TOPIC_ALARM[4]}" -> alarmCmnd.updateStateSensor(4, msg)
                 "error/${LIST_TOPIC_ALARM[0]}" -> { alarmCmnd.showAlert(ERROR_SEND_CMND, msg)
-                    Log.i(TAG_MQTT, "Error alarme: $msg")
+                    Log.i(TAG_MQTT, "Error alarm: $msg")
                 }
                 else -> Log.d(TAG_MQTT, ERROR_LOAD_STATE_MQTT)
             }

@@ -5,26 +5,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.AutomationFragment">
+    tools:context=".ui.fragment.AutomationFragment">
 
     <ProgressBar
         android:id="@+id/progressBarAutomation"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:indeterminate="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="visible"
+        android:indeterminate="true"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        />
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="320dp"
+        android:layout_height="400dp"
         android:layout_margin="16dp"
         app:cardCornerRadius="16dp"
         app:cardElevation="8dp"
-        android:backgroundTint="@color/light_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/textIlumicacao"
+                    android:id="@+id/textLighting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -43,13 +43,14 @@
                     android:textColor="@color/black"
                     android:textSize="24sp"
                     android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.045"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    />
 
                 <View
-                    android:id="@+id/lineSeparatorIluminacao"
+                    android:id="@+id/lineSeparatorLighting"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_margin="10dp"
@@ -57,17 +58,17 @@
                     android:elevation="4dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/textIlumicacao" />
+                    app:layout_constraintTop_toBottomOf="@id/textLighting" />
 
                 <ScrollView
-                    android:id="@+id/scrollViewIluminacao"
+                    android:id="@+id/scrollViewILighting"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="60dp"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/lineSeparatorIluminacao">
+                    app:layout_constraintTop_toBottomOf="@id/lineSeparatorLighting">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -78,14 +79,15 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="8dp"
-                            app:cardElevation="1dp"
                             app:cardCornerRadius="32dp"
+                            app:cardElevation="8dp"
                             app:cardBackgroundColor="@color/dark__gray"
-                            app:layout_constraintBottom_toTopOf="@id/cardMaterialLamp3"
-                            app:layout_constraintEnd_toStartOf="@id/cardMaterialLamp2"
                             app:layout_constraintHorizontal_bias="0.045"
+                            app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
+                            app:layout_constraintEnd_toStartOf="@id/cardMaterialLamp2"
+                            app:layout_constraintBottom_toTopOf="@id/cardMaterialLamp3"
+                            >
 
                             <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="match_parent"
@@ -105,7 +107,7 @@
                                     app:layout_constraintTop_toTopOf="parent" />
 
                                 <TextView
-                                    android:id="@+id/txtNameLamp"
+                                    android:id="@+id/txtNameLamp1"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="2dp"
@@ -118,7 +120,7 @@
                                     app:layout_constraintTop_toBottomOf="@id/btnLight1" />
 
                                 <TextView
-                                    android:id="@+id/txt_state_lamp_1"
+                                    android:id="@+id/txtStateLamp1"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="10dp"
@@ -128,7 +130,7 @@
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toBottomOf="@id/txtNameLamp" />
+                                    app:layout_constraintTop_toBottomOf="@id/txtNameLamp1" />
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -139,14 +141,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="8dp"
-                            app:cardElevation="1dp"
+                            app:cardElevation="8dp"
                             app:cardCornerRadius="32dp"
                             app:cardBackgroundColor="@color/dark__gray"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintStart_toEndOf="@id/cardMaterialLamp1"
                             app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/cardMaterialLamp1"
                             app:layout_constraintBottom_toTopOf="@id/cardMaterialLamp4"
-                            tools:layout_editor_absoluteX="210dp">
+                            >
 
                             <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="match_parent"
@@ -162,8 +164,9 @@
                                     android:background="@drawable/light_off"
                                     android:contentDescription="status lâmpada"
                                     app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
                                     app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent" />
+                                    />
 
                                 <TextView
                                     android:id="@+id/txtNameLamp2"
@@ -187,9 +190,9 @@
                                     android:textAlignment="center"
                                     android:textColor="@color/black"
                                     android:textStyle="bold"
-                                    app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintTop_toBottomOf="@id/txtNameLamp2" />
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -200,15 +203,17 @@
                             android:id="@+id/cardMaterialLamp3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            app:cardElevation="1dp"
+                            android:layout_marginBottom="16dp"
+                            android:layout_marginTop="16dp"
+                            app:cardElevation="8dp"
                             app:cardCornerRadius="32dp"
                             app:cardBackgroundColor="@color/dark__gray"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@id/cardMaterialLamp4"
                             app:layout_constraintHorizontal_bias="0.045"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/cardMaterialLamp1">
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/cardMaterialLamp4"
+                            app:layout_constraintTop_toBottomOf="@id/cardMaterialLamp1"
+                            >
 
                             <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="match_parent"
@@ -224,8 +229,9 @@
                                     android:background="@drawable/light_off"
                                     android:contentDescription="status lâmpada"
                                     app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
                                     app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent" />
+                                    />
 
                                 <TextView
                                     android:id="@+id/txtNameLamp3"
@@ -233,24 +239,24 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="2dp"
                                     android:text="Luz da Sala"
+                                    android:textStyle="bold"
                                     android:textAlignment="center"
                                     android:textColor="@color/black"
-                                    android:textStyle="bold"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toBottomOf="@id/btnLight3" />
 
                                 <TextView
-                                    android:id="@+id/txt_state_lamp_3"
+                                    android:id="@+id/txtStateLamp3"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="10dp"
                                     android:text="Offline"
-                                    android:textColor="@color/black"
                                     android:textStyle="bold"
-                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    android:textColor="@color/black"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintTop_toBottomOf="@id/txtNameLamp3"/>
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -261,15 +267,16 @@
                             android:id="@+id/cardMaterialLamp4"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
+                            android:layout_marginBottom="16dp"
+                            android:layout_marginTop="16dp"
+                            app:cardElevation="8dp"
                             app:cardCornerRadius="32dp"
-                            app:cardElevation="1dp"
                             app:cardBackgroundColor="@color/dark__gray"
-                            app:layout_constraintTop_toBottomOf="@id/cardMaterialLamp2"
-                            app:layout_constraintStart_toEndOf="@id/cardMaterialLamp3"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            tools:layout_editor_absoluteX="210dp">
+                            app:layout_constraintStart_toEndOf="@id/cardMaterialLamp3"
+                            app:layout_constraintTop_toBottomOf="@id/cardMaterialLamp2"
+                            >
 
                             <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="match_parent"

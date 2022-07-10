@@ -20,4 +20,5 @@
     <string name="icone_violacao">Icone Violação</string>
     <string name="violed">Disparado</string>
     <string name="text_iluminacao">Iluminação</string>
+    <string name="offline">Offline</string>
 </resources>
