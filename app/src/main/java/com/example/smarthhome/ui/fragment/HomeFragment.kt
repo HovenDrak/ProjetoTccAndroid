@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.Transformation
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.smarthhome.R
@@ -18,6 +19,7 @@ import com.example.smarthhome.databinding.FragmentHomeBinding
 import com.example.smarthhome.repository.ApiRepository
 import com.example.smarthhome.repository.MqttRepository
 import com.example.smarthhome.service.Alarm
+import com.google.android.material.card.MaterialCardView
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.koin.android.ext.android.inject
 
@@ -74,7 +76,8 @@ class HomeFragment: Fragment() {
     private fun configButtonActiveDisarm() {
         binding.btnActiveDesarm.setOnClickListener{
             if(show) {
-                runAnimation(R.anim.animation_move_up, false)
+                runAnimation(false)
+                animationBounce(binding.btnActiveDesarm)
                 sendCommand(CMND_MQTT_DISARM)
                 animationSendCmnd(false)
                 show = false
@@ -86,7 +89,8 @@ class HomeFragment: Fragment() {
     private fun configButtonActiveArm() {
         binding.btnActiveArm.setOnClickListener{
             if(show) {
-                runAnimation(R.anim.animation_move_up, false)
+                runAnimation(false)
+                animationBounce(binding.btnActiveArm)
                 sendCommand(CMND_MQTT_ARM)
                 animationSendCmnd(true)
                 show = false
@@ -96,23 +100,32 @@ class HomeFragment: Fragment() {
     }
 
     private fun configButtonVioled(){
-        binding.btnVioled.setOnClickListener{ show = configAnimation() }
+        binding.btnVioled.setOnClickListener{
+            animationBounce(binding.btnVioled)
+            show = configAnimation()
+        }
     }
 
     private fun configButtonArm() {
-        binding.btnArm.setOnClickListener{ show = configAnimation() }
+        binding.btnArm.setOnClickListener{
+            animationBounce(binding.btnArm)
+            show = configAnimation()
+        }
     }
 
     private fun configButtonDisarm() {
-        binding.btnDisarm.setOnClickListener{ show = configAnimation() }
+        binding.btnDisarm.setOnClickListener{
+            animationBounce(binding.btnDisarm)
+            show = configAnimation()
+        }
     }
 
     private fun configAnimation() =
         if (!show) {
-            runAnimation(R.anim.animation_move_down, true)
+            runAnimation(true)
             true
         } else {
-            runAnimation(R.anim.animation_move_up, false)
+            runAnimation(false)
             false
         }
 
@@ -120,24 +133,19 @@ class HomeFragment: Fragment() {
         mqttRepository.publish(TOPIC_CMND_ALARM, cmnd)
     }
 
-    private fun runAnimation(animationStatus: Int, visible: Boolean) {
-        var count = 1.0
+    private fun runAnimation(visible: Boolean) {
         val animation: Animation = object : Animation() {
             override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
                 if(visible){
-                    binding.constraintCommand.layoutParams.height = (340 * interpolatedTime).toInt()
+                    binding.constraintCommand.layoutParams.height = (390 * interpolatedTime).toInt()
                 } else{
-                    binding.constraintCommand.layoutParams.height = (340/(interpolatedTime + count)).toInt()
-                    count += 0.5
+                    binding.constraintCommand.layoutParams.height = (390 - (interpolatedTime * 390)).toInt()
                 }
                 binding.constraintCommand.requestLayout()
             }
         }
         animation.duration = 500
         binding.constraintCommand.startAnimation(animation)
-
-        binding.materialCardViewSensors
-            .startAnimation(AnimationUtils.loadAnimation(context, animationStatus))
     }
 
     private fun animationSendCmnd(cmndArm: Boolean){
@@ -148,6 +156,10 @@ class HomeFragment: Fragment() {
                 binding.btnArm.startAnimation(alarmCmnd.configAlphaAnimation(false))
             }
         }
+    }
 
+    private fun animationBounce(imageButton: ImageButton){
+        imageButton.startAnimation(AnimationUtils
+            .loadAnimation(this.context, R.anim.bounce))
     }
 }

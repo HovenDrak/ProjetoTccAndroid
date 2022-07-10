@@ -178,7 +178,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/constraintCommand"
                     android:layout_width="match_parent"
-                    android:layout_height="8dp"
+                    android:layout_height="4dp"
                     android:layout_marginTop="130dp"
                     app:layout_constraintTop_toBottomOf="@id/txtHome"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -223,7 +223,6 @@
                         android:visibility="visible"
                         tools:ignore="SmallSp"
                         app:layout_constraintVertical_bias="0"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/btnActiveArm"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"/>
@@ -254,7 +253,6 @@
                         tools:ignore="SmallSp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/btnActiveDesarm"
                         />
 
