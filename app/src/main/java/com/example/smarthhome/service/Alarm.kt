@@ -45,6 +45,7 @@ class Alarm{
 
         binding.btnActiveArm.visibility = View.GONE
         binding.txtActiveArm.visibility = View.GONE
+
         binding.btnActiveDesarm.visibility = View.VISIBLE
         binding.txtActiveDesarm.visibility = View.VISIBLE
     }
@@ -70,13 +71,17 @@ class Alarm{
 
     private fun stateVioled() {
 
+
         binding.btnActiveArm.visibility = View.GONE
         binding.txtActiveArm.visibility = View.GONE
+
         binding.btnActiveDesarm.visibility = View.VISIBLE
         binding.txtActiveDesarm.visibility = View.VISIBLE
 
+        binding.btnArm.startAnimation(AlphaAnimation(0.0f, 0.0f))
         binding.btnArm.visibility = View.GONE
         binding.txtArm.visibility = View.GONE
+
         binding.btnVioled.visibility = View.VISIBLE
         binding.txtVioled.visibility = View.VISIBLE
 
