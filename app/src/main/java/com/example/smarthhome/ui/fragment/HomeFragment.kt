@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.smarthhome.constants.Constants.LIST_TOPIC_ALARM
-import com.example.smarthhome.constants.Constants.CMND_MQTT_DISARM
+import com.example.smarthhome.constants.Constants.SEND_CMND_ARM
+import com.example.smarthhome.constants.Constants.SEND_CMND_DISARM
 import com.example.smarthhome.constants.Constants.TOPIC_CMND_ALARM
-import com.example.smarthhome.constants.Constants.CMND_MQTT_ARM
 import com.example.smarthhome.databinding.FragmentHomeBinding
 import com.example.smarthhome.repository.ApiRepository
 import com.example.smarthhome.repository.MqttRepository
@@ -75,7 +75,7 @@ class HomeFragment: Fragment() {
             if(show) {
                 anim.animationShowCmndButtons(false)
                 anim.animationBounce(binding.btnActiveDesarm, false)
-                sendCommand(CMND_MQTT_DISARM)
+                sendCommand(SEND_CMND_DISARM)
                 anim.animationSendCmnd(false)
                 show = false
                 Toast.makeText(context, "Comando de Desarme enviado com sucesso.", Toast.LENGTH_SHORT).show()
@@ -88,7 +88,7 @@ class HomeFragment: Fragment() {
             if(show) {
                 anim.animationShowCmndButtons(false)
                 anim.animationBounce(binding.btnActiveArm, false)
-                sendCommand(CMND_MQTT_ARM)
+                sendCommand(SEND_CMND_ARM)
                 anim.animationSendCmnd(true)
                 show = false
                 Toast.makeText(context, "Comando de Arme enviado com sucesso.", Toast.LENGTH_SHORT).show()

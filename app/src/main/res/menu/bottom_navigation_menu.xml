@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/txtHome"
+        android:id="@+id/fragmentHome"
         android:enabled="true"
         android:icon="@drawable/ic_home"
         android:title="@string/home"/>
     <item
-        android:id="@+id/automation"
+        android:id="@+id/fragmentAutomation"
         android:enabled="true"
         android:icon="@drawable/ic_automation"
         android:title="@string/automacao"/>
+    <item
+        android:id="@+id/fragmentEventHistory"
+        android:enabled="true"
+        android:icon="@drawable/ic_event_history"
+        android:title="@string/event_history"/>
 </menu>

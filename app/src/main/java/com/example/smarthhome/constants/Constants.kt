@@ -4,7 +4,7 @@ object Constants{
 
     // -------------------- CONSTANTS ERRORS --------------------//
     const val ERROR_LOAD_STATE_MQTT = "NÃO FOI POSSIVEL ATUALIZAR O STATUS PELO MQTT"
-    const val ERROR_LOAD_STATE_API = "ERRO AO CARREGAR STATUS"
+    const val ERROR_LOAD_API = "ERRO AO CARREGAR API"
     const val ERROR_SEND_CMND = "Erro ao enviar comando"
 
     // -------------------- CONSTANTS DATABASE --------------------//
@@ -25,6 +25,9 @@ object Constants{
     const val CMND_MQTT_VIOLED = "\"disparado\""
     const val CMND_MQTT_DISARM = "\"desarmado\""
     const val CMND_MQTT_ARM = "\"armado\""
+
+    const val SEND_CMND_DISARM = "[{\"newState\":\"desarmado\"}, {\"user\":\"mobile\"}]"
+    const val SEND_CMND_ARM = "[{\"newState\":\"armado\"}, {\"user\":\"mobile\"}]"
 
     const val CMND_API_VIOLED = "disparado"
     const val CMND_API_DISARM = "desarmado"
@@ -50,8 +53,9 @@ object Constants{
 
     // -------------------- CONSTANTS GENERAL --------------------//
     const val HOST_API = "https://api-tcc-oficial.herokuapp.com"
-    const val PATH_API_AUTOMATION = "/status/all/automation"
-    const val PATH_API_HOME = "/status/all/alarm"
+    const val PATH_API_AUTOMATION = "/automation/status/all"
+    const val PATH_API_HOME = "/alarm/status/all"
+    const val PATH_API_LOG_DAY = "/day/log"
 
     const val HOST_MQTT = "ssl://bbfb08f6f1b84ffebf8b0c4fbbcd0e90.s1.eu.hivemq.cloud:8883"
     const val CLIENT_ID_MQTT = "android_client"

@@ -3,11 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/abel.carmo/.gradle/caches/transforms-3/e84f0353bf836f4a4fbacb9e2bfeb75c/transformed/jetified-timelineview-1.1.5/res/drawable/marker.xml" value="0.3085" />
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.274" />
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/drawable/bottom_navigation_selector.xml" value="0.1585" />
+        <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/drawable/circle_time_line.xml" value="0.247" />
+        <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/drawable/ic_alarm_default.xml" value="0.247" />
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/drawable/ic_alarm_violed.xml" value="0.274" />
+        <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/drawable/ic_arm.xml" value="0.247" />
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/drawable/ic_automation.xml" value="0.268" />
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/drawable/ic_baseline_home_24.xml" value="0.268" />
+        <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/drawable/ic_desarm.xml" value="0.221" />
+        <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/drawable/ic_event_history.xml" value="0.247" />
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/drawable/ic_launcher_background.xml" value="0.268" />
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/drawable/icon_automation.xml" value="0.268" />
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/drawable/icon_home.xml" value="0.268" />
@@ -15,8 +21,11 @@
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/layout/activity_automation.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/layout/activity_home.xml" value="0.33" />
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/layout/activity_main.xml" value="0.35260416666666666" />
+        <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/layout/circle_time_line.xml" value="0.275" />
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/layout/fragment_automation.xml" value="0.25" />
+        <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/layout/fragment_events_history.xml" value="0.25" />
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/layout/fragment_home.xml" value="0.25" />
+        <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/layout/item_history_event.xml" value="0.33" />
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/xml/slide_down.xml" value="0.36666666666666664" />
       </map>

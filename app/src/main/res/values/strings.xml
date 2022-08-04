@@ -21,4 +21,11 @@
     <string name="violed">Disparado</string>
     <string name="text_iluminacao">Iluminação</string>
     <string name="offline">Offline</string>
+    <string name="tittle_history_events">Historico de Eventos</string>
+    <string name="description_button_date">Selecionar data de eventos</string>
+    <string name="description_circle_timeline">circulo time line</string>
+    <string name="event_time_text_default">Time</string>
+    <string name="event_text_default">Evento</string>
+    <string name="description_icon_event">icone evento</string>
+    <string name="event_history">Eventos</string>
 </resources>

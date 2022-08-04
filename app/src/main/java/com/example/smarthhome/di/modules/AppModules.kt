@@ -6,8 +6,10 @@ import com.example.smarthhome.constants.Constants.CLIENT_ID_MQTT
 import com.example.smarthhome.constants.Constants.HOST_MQTT
 import com.example.smarthhome.constants.Constants.NAME_DATABASE
 import com.example.smarthhome.database.AppDatabase
+import com.example.smarthhome.repository.dao.EventsDao
 import com.example.smarthhome.service.Alarm
 import com.example.smarthhome.service.Automation
+import com.example.smarthhome.service.EventsHistory
 import com.example.smarthhome.ui.animation.Animations
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.koin.dsl.module
@@ -39,6 +41,14 @@ val appModules = module {
 
     single<Animations>{
         Animations()
+    }
+
+    single<EventsDao>{
+        EventsDao()
+    }
+
+    single<EventsHistory>{
+        EventsHistory()
     }
 
 }

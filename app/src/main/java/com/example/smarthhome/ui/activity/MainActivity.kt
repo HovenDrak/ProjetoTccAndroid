@@ -9,6 +9,7 @@ import com.example.smarthhome.R
 import com.example.smarthhome.databinding.ActivityMainBinding
 import com.example.smarthhome.repository.MqttRepository
 import com.example.smarthhome.ui.fragment.AutomationFragment
+import com.example.smarthhome.ui.fragment.EventsHistoryFragment
 import com.example.smarthhome.ui.fragment.HomeFragment
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.koin.android.ext.android.inject
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private val mqttRepository = MqttRepository(mqttClient)
     private val homeFragment = HomeFragment()
     private val automationFragment = AutomationFragment()
+    private val eventHistoryFragment = EventsHistoryFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,8 +45,9 @@ class MainActivity : AppCompatActivity() {
     private fun configNavigation() {
         binding.navigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.txtHome -> replaceFragment(homeFragment)
-                R.id.automation -> replaceFragment(automationFragment)
+                R.id.fragmentHome -> replaceFragment(homeFragment)
+                R.id.fragmentAutomation -> replaceFragment(automationFragment)
+                R.id.fragmentEventHistory -> replaceFragment(eventHistoryFragment)
             }
             return@setOnNavigationItemSelectedListener true
         }
