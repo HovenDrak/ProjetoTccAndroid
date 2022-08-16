@@ -12,11 +12,12 @@ import com.example.smarthhome.retrofit.ServiceBuilderApi
 import com.example.smarthhome.service.Alarm
 import com.example.smarthhome.service.Automation
 import com.example.smarthhome.service.EventsHistory
-import org.koin.android.ext.android.inject
 import org.koin.java.KoinJavaComponent.inject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ApiRepository {
 
@@ -65,11 +66,18 @@ class ApiRepository {
 
         getLogDayResult.enqueue(object: Callback<List<Event>>{
             override fun onResponse(call: Call<List<Event>>, response: Response<List<Event>>) {
-                response.body()!!.let {
+                response.body()?.let {
                     eventsDao.clearAndAddList(it)
-                    eventsHistory.configDateEvent(it[0].date)
+                    if(it.isEmpty()){
+                        val sdf = SimpleDateFormat("dd-MM-yyyy")
+                        eventsHistory.configDateEvent(sdf.format(Date()), true)
+                        eventsHistory.activeNotFoundEvents()
+                    }else {
+                        eventsHistory.configDateEvent(it[0].date, false)
+                        eventsHistory.activeWidgetsView()
+                    }
                     eventsHistory.configRecyclerView(it)
-                    eventsHistory.activeWidgetsView()
+
                 }
             }
 

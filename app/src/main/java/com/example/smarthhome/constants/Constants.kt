@@ -14,6 +14,11 @@ object Constants{
     val LIST_TOPIC_ALARM = listOf("alarme", "setor1", "setor2", "setor3", "setor4", "error/alarme")
     const val TOPIC_CMND_ALARM = "cmnd/alarme"
 
+    const val NAME_SETOR_1 = "Porta Sala"
+    const val NAME_SETOR_2 = "Porta Fundo"
+    const val NAME_SETOR_3 = "Porta Sacada"
+    const val NAME_SETOR_4 = "Janela"
+
     const val CMND_MQTT_SENSOR_CLOSE = "\"fechado\""
     const val CMND_MQTT_SENSOR_OPEN = "\"aberto\""
 
@@ -26,8 +31,8 @@ object Constants{
     const val CMND_MQTT_DISARM = "\"desarmado\""
     const val CMND_MQTT_ARM = "\"armado\""
 
-    const val SEND_CMND_DISARM = "[{\"newState\":\"desarmado\"}, {\"user\":\"mobile\"}]"
-    const val SEND_CMND_ARM = "[{\"newState\":\"armado\"}, {\"user\":\"mobile\"}]"
+    const val SEND_CMND_DISARM = "[{\"newState\":\"desarmado\"}, {\"user\":\"Mobile\"}]"
+    const val SEND_CMND_ARM = "[{\"newState\":\"armado\"}, {\"user\":\"Mobile\"}]"
 
     const val CMND_API_VIOLED = "disparado"
     const val CMND_API_DISARM = "desarmado"

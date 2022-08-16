@@ -17,7 +17,11 @@ class EventsHistory {
         this.context = context
     }
 
-    fun configDateEvent(event: String) {
+    fun configDateEvent(event: String, isEmpty: Boolean) {
+        if(isEmpty){
+            binding.txtDayEvent.text = "Hoje $event"
+            return
+        }
         binding.txtDayEvent.text = "Hoje ${event.substring(0, event.indexOf(" "))}"
     }
 
@@ -32,8 +36,14 @@ class EventsHistory {
         }
     }
 
+    fun activeNotFoundEvents(){
+        binding.progressBarEventsHistory.visibility = View.GONE
+        binding.txtNotFoundEvents.visibility = View.VISIBLE
+    }
+
     fun activeWidgetsView(){
         binding.progressBarEventsHistory.visibility = View.GONE
+        binding.txtNotFoundEvents.visibility = View.GONE
         binding.txtDayEvent.visibility = View.VISIBLE
         binding.recyclerViewEvents.visibility = View.VISIBLE
     }

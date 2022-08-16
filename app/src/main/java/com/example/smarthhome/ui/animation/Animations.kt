@@ -29,7 +29,7 @@ class Animations {
                 if(show){
                     binding.constraintCommand.layoutParams.height = (390 * interpolatedTime).toInt()
                 } else{
-                    binding.constraintCommand.layoutParams.height = (390 - (interpolatedTime * 390)).toInt()
+                    binding.constraintCommand.layoutParams.height = (390 - (interpolatedTime * 370)).toInt()
                 }
                 binding.constraintCommand.requestLayout()
             }

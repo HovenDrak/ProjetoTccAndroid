@@ -13,9 +13,9 @@
     <string name="status">Status</string>
     <string name="setor_1_nome">1 - Porta Sala</string>
     <string name="setor_2_nome">2 - Porta Fundo</string>
-    <string name="status_sensor">Status sensor 1</string>
     <string name="setor_3_nome">3 - Porta Sacada</string>
     <string name="setor_4_nome">4 - Janela</string>
+    <string name="status_sensor">Status sensor 1</string>
     <string name="icone_arme">Icone Arme</string>
     <string name="icone_violacao">Icone Violação</string>
     <string name="violed">Disparado</string>

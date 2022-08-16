@@ -13,6 +13,7 @@
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/drawable/ic_automation.xml" value="0.268" />
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/drawable/ic_baseline_home_24.xml" value="0.268" />
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/drawable/ic_desarm.xml" value="0.221" />
+        <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/drawable/ic_disarm.xml" value="0.265" />
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/drawable/ic_event_history.xml" value="0.247" />
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/drawable/ic_launcher_background.xml" value="0.268" />
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/drawable/icon_automation.xml" value="0.268" />
@@ -24,7 +25,7 @@
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/layout/circle_time_line.xml" value="0.275" />
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/layout/fragment_automation.xml" value="0.25" />
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/layout/fragment_events_history.xml" value="0.25" />
-        <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/layout/fragment_home.xml" value="0.25" />
+        <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/layout/fragment_home.xml" value="0.26707132018209406" />
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/layout/item_history_event.xml" value="0.33" />
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/abel.carmo/AndroidStudioProjects/SmarthHome/app/src/main/res/xml/slide_down.xml" value="0.36666666666666664" />
