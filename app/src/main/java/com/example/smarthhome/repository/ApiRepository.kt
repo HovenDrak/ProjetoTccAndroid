@@ -17,6 +17,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class ApiRepository {
@@ -61,23 +64,32 @@ class ApiRepository {
         })
     }
 
-    fun getDayLog(context: Context){
-        val getLogDayResult: Call<List<Event>> = api.getAlarmService().getEventsDay()
+    fun getDayLog(context: Context, day: String){
+        val getLogDayResult: Call<List<Event>> = api.getAlarmService().getEvents()
 
         getLogDayResult.enqueue(object: Callback<List<Event>>{
             override fun onResponse(call: Call<List<Event>>, response: Response<List<Event>>) {
                 response.body()?.let {
                     eventsDao.clearAndAddList(it)
-                    if(it.isEmpty()){
-                        val sdf = SimpleDateFormat("dd-MM-yyyy")
-                        eventsHistory.configDateEvent(sdf.format(Date()), true)
-                        eventsHistory.activeNotFoundEvents()
-                    }else {
-                        eventsHistory.configDateEvent(it[0].date, false)
-                        eventsHistory.activeWidgetsView()
-                    }
-                    eventsHistory.configRecyclerView(it)
+                    val events = mutableListOf<Event>()
+                    val dateNow = LocalDateTime.parse(day, DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))
+                    dateNow.minusHours(3)
 
+                    eventsHistory.configDateEvent(dateNow.toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyy")), true)
+
+                    for (log in it){
+                        val data = LocalDateTime.parse(log.date, DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))
+                        data.minusHours(3)
+
+                        if (data.dayOfMonth == dateNow.dayOfMonth && data.monthValue == dateNow.monthValue){
+                            events.add(log)
+                        }
+                    }
+                    if(events.isEmpty())
+                        eventsHistory.activeNotFoundEvents()
+                    else
+                        eventsHistory.activeWidgetsView()
+                    eventsHistory.getAdapter().refresh(events)
                 }
             }
 

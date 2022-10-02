@@ -21,5 +21,5 @@ interface AlarmService {
 
     @Headers("Content-Type: application/json")
     @HTTP(method = "GET", path = PATH_API_LOG_DAY)
-    fun getEventsDay(): Call<List<Event>>
+    fun getEvents(): Call<List<Event>>
 }

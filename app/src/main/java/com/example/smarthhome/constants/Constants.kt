@@ -60,7 +60,7 @@ object Constants{
     const val HOST_API = "https://api-tcc-oficial.herokuapp.com"
     const val PATH_API_AUTOMATION = "/automation/status/all"
     const val PATH_API_HOME = "/alarm/status/all"
-    const val PATH_API_LOG_DAY = "/day/log"
+    const val PATH_API_LOG_DAY = "/all/log"
 
     const val HOST_MQTT = "ssl://bbfb08f6f1b84ffebf8b0c4fbbcd0e90.s1.eu.hivemq.cloud:8883"
     const val CLIENT_ID_MQTT = "android_client"

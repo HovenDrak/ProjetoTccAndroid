@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.View
 import com.example.smarthhome.databinding.FragmentEventsHistoryBinding
 import com.example.smarthhome.model.Event
-import com.example.smarthhome.ui.recyclerview.adapter.ListEventAdapter
+import com.example.smarthhome.ui.adapter.ListEventAdapter
 
 class EventsHistory {
 
@@ -19,18 +19,18 @@ class EventsHistory {
 
     fun configDateEvent(event: String, isEmpty: Boolean) {
         if(isEmpty){
-            binding.txtDayEvent.text = "Hoje $event"
+            binding.txtDayEvent.text = "Dia $event"
             return
         }
-        binding.txtDayEvent.text = "Hoje ${event.substring(0, event.indexOf(" "))}"
+        binding.txtDayEvent.text = "Dia ${event.substring(0, event.indexOf(" "))}"
     }
 
-    fun configRecyclerView(listEvents: List<Event>){
+    fun configAdapter(listEvents: List<Event>){
         adapter = ListEventAdapter(context, listEvents)
         binding.recyclerViewEvents.adapter = adapter
     }
 
-    fun refreshRecyclerView(listEvents: List<Event>){
+    fun refreshAdapter(listEvents: List<Event>){
         if(this::adapter.isInitialized){
             adapter.refresh(listEvents)
         }
@@ -46,5 +46,9 @@ class EventsHistory {
         binding.txtNotFoundEvents.visibility = View.GONE
         binding.txtDayEvent.visibility = View.VISIBLE
         binding.recyclerViewEvents.visibility = View.VISIBLE
+    }
+
+    fun getAdapter(): ListEventAdapter {
+        return this.adapter
     }
 }
