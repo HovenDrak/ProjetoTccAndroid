@@ -22,12 +22,15 @@ import com.example.smarthhome.R
 import android.widget.ImageView
 import android.view.View
 import android.util.Log
+import com.example.smarthhome.constants.Constants.CMND_API_SENSOR_BYPASS
+import com.example.smarthhome.constants.Constants.CMND_MQTT_SENSOR_BYPASS
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class Alarm{
 
     private lateinit var binding: FragmentHomeBinding
     private lateinit var context: Context
+    private var canArm = false
 
     fun setConfigAlarm(binding: FragmentHomeBinding, context: Context){
         this.binding = binding
@@ -128,9 +131,13 @@ class Alarm{
     private fun stateSensor(imageView: ImageView, status: String) {
         when (status) {
             CMND_MQTT_SENSOR_CLOSE -> imageView.setBackgroundResource(R.drawable.img_sensor_default)
+            CMND_MQTT_SENSOR_BYPASS -> imageView.setBackgroundResource(R.drawable.img_sensor_bypass)
             CMND_MQTT_SENSOR_OPEN -> imageView.setBackgroundResource(R.drawable.img_sensor_open)
+
+            CMND_API_SENSOR_BYPASS -> imageView.setBackgroundResource(R.drawable.img_sensor_bypass)
             CMND_API_SENSOR_CLOSE -> imageView.setBackgroundResource(R.drawable.img_sensor_default)
             CMND_API_SENSOR_OPEN -> imageView.setBackgroundResource(R.drawable.img_sensor_open)
+
             CMND_SENSOR_DEFAULT -> imageView.setBackgroundResource(R.drawable.img_sensor_default)
         }
     }
@@ -164,9 +171,9 @@ class Alarm{
     fun updateStateAlarm(status: String) {
         Log.d(TAG_MQTT, "update alarm for status $status")
         when (status) {
-            CMND_MQTT_VIOLED -> stateVioled()
-            CMND_MQTT_DISARM -> stateDisarm()
-            CMND_MQTT_ARM -> stateArm()
+            CMND_API_VIOLED -> stateVioled()
+            CMND_API_DISARM -> stateDisarm()
+            CMND_API_ARM -> stateArm()
         }
     }
 

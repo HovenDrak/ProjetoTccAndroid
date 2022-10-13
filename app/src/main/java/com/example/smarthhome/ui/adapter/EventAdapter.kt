@@ -11,14 +11,13 @@ import com.example.smarthhome.constants.Constants.NAME_SETOR_1
 import com.example.smarthhome.constants.Constants.NAME_SETOR_2
 import com.example.smarthhome.constants.Constants.NAME_SETOR_3
 import com.example.smarthhome.constants.Constants.NAME_SETOR_4
-import java.sql.Time
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class ListEventAdapter(
+class EventAdapter(
     private val context: Context,
     events: List<Event>
-): RecyclerView.Adapter<ListEventAdapter.ViewHolder>() {
+): RecyclerView.Adapter<EventAdapter.ViewHolder>() {
 
     private val events = events.toMutableList()
 

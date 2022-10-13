@@ -1,6 +1,9 @@
 package com.example.smarthhome.repository
 
 import android.util.Log
+import com.example.smarthhome.constants.Constants
+import com.example.smarthhome.constants.Constants.CMND_API_SENSOR_BYPASS
+import com.example.smarthhome.constants.Constants.CMND_MQTT_ARM
 import com.example.smarthhome.constants.Constants.ERROR_LOAD_STATE_MQTT
 import com.example.smarthhome.constants.Constants.ERROR_SEND_CMND
 import com.example.smarthhome.constants.Constants.LIST_TOPIC_ALARM
@@ -96,6 +99,7 @@ class MqttRepository(private val mqttClient: MqttAndroidClient) {
                     automationCmnd.updateStateLight(4, msg)
                     db.statusDAO.updateState(msg.replace("\"", ""), 4)
                 }
+
                 else -> Log.d(TAG_MQTT, ERROR_LOAD_STATE_MQTT)
             }
         }
@@ -115,15 +119,25 @@ class MqttRepository(private val mqttClient: MqttAndroidClient) {
             Log.d(
                 TAG_MQTT, "Received message ${countMessageAlarm}: ${message.toString()} from topic: $topic"
             )
-            val msg = message.toString()
+            val msg = message.toString().replace("\"", "")
+
             when (topic) {
                 "status/${LIST_TOPIC_ALARM[0]}" -> alarmCmnd.updateStateAlarm(msg)
-                "status/${LIST_TOPIC_ALARM[1]}" -> alarmCmnd.updateStateSensor(1, msg)
-                "status/${LIST_TOPIC_ALARM[2]}" -> alarmCmnd.updateStateSensor(2, msg)
-                "status/${LIST_TOPIC_ALARM[3]}" -> alarmCmnd.updateStateSensor(3, msg)
-                "status/${LIST_TOPIC_ALARM[4]}" -> alarmCmnd.updateStateSensor(4, msg)
-                "error/${LIST_TOPIC_ALARM[0]}" -> { alarmCmnd.showAlert(ERROR_SEND_CMND, msg)
-                    Log.i(TAG_MQTT, "Error alarm: $msg")
+                "status/${LIST_TOPIC_ALARM[1]}" -> {
+                    alarmCmnd.updateStateSensor(1, msg)
+                    db.statusDAO.updateStatusAlarm(msg, if(msg == CMND_API_SENSOR_BYPASS) 1 else 0,1)
+                }
+                "status/${LIST_TOPIC_ALARM[2]}" -> {
+                    alarmCmnd.updateStateSensor(2, msg)
+                    db.statusDAO.updateStatusAlarm(msg, if(msg == CMND_API_SENSOR_BYPASS) 1 else 0,2)
+                }
+                "status/${LIST_TOPIC_ALARM[3]}" -> {
+                    alarmCmnd.updateStateSensor(3, msg)
+                    db.statusDAO.updateStatusAlarm(msg, if(msg == CMND_API_SENSOR_BYPASS) 1 else 0,3)
+                }
+                "status/${LIST_TOPIC_ALARM[4]}" -> {
+                    alarmCmnd.updateStateSensor(4, msg)
+                    db.statusDAO.updateStatusAlarm(msg, if(msg == CMND_API_SENSOR_BYPASS) 1 else 0, 4)
                 }
                 else -> Log.d(TAG_MQTT, ERROR_LOAD_STATE_MQTT)
             }

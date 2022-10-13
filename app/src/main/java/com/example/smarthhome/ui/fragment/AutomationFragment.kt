@@ -13,7 +13,7 @@ import com.example.smarthhome.constants.Constants.CMND_LIGHT_ON
 import com.example.smarthhome.constants.Constants.LIST_TOPIC_LIGHT
 import com.example.smarthhome.database.AppDatabase
 import com.example.smarthhome.databinding.FragmentAutomationBinding
-import com.example.smarthhome.model.StatusDB
+import com.example.smarthhome.database.models.StatusDB
 import com.example.smarthhome.repository.ApiRepository
 import com.example.smarthhome.repository.MqttRepository
 import com.example.smarthhome.service.Automation

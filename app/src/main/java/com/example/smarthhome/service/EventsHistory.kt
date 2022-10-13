@@ -4,13 +4,13 @@ import android.content.Context
 import android.view.View
 import com.example.smarthhome.databinding.FragmentEventsHistoryBinding
 import com.example.smarthhome.model.Event
-import com.example.smarthhome.ui.adapter.ListEventAdapter
+import com.example.smarthhome.ui.adapter.EventAdapter
 
 class EventsHistory {
 
     private lateinit var binding: FragmentEventsHistoryBinding
     private lateinit var context: Context
-    private lateinit var adapter: ListEventAdapter
+    private lateinit var adapter: EventAdapter
 
     fun setBinding(binding: FragmentEventsHistoryBinding, context: Context){
         this.binding = binding
@@ -26,7 +26,7 @@ class EventsHistory {
     }
 
     fun configAdapter(listEvents: List<Event>){
-        adapter = ListEventAdapter(context, listEvents)
+        adapter = EventAdapter(context, listEvents)
         binding.recyclerViewEvents.adapter = adapter
     }
 
@@ -48,7 +48,7 @@ class EventsHistory {
         binding.recyclerViewEvents.visibility = View.VISIBLE
     }
 
-    fun getAdapter(): ListEventAdapter {
+    fun getAdapter(): EventAdapter {
         return this.adapter
     }
 }

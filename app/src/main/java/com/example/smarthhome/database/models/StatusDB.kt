@@ -1,9 +1,9 @@
-package com.example.smarthhome.model
+package com.example.smarthhome.database.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(tableName = "StatusDB")
 data class StatusDB(
     @PrimaryKey(autoGenerate = true)
     val id: Int,

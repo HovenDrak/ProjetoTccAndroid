@@ -3,7 +3,7 @@
     <style name="Theme.SmarthHome" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">#FF5722</item>
-        <item name="colorPrimaryVariant">#110039</item>
+        <item name="colorPrimaryVariant">@color/black</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -13,4 +13,25 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+
+    <style name="Button" parent="Widget.MaterialComponents.Button">
+
+        <item name="cornerRadius">12dp</item>
+        <item name="elevation">4dp</item>
+        <item name="backgroundColor">@color/orange_2</item>
+
+    </style>
+
+    <style name="Theme.MaterialComponents.Translucent" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="colorPrimaryDark">@color/orange</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+        <item name="android:windowBackground">@android:drawable/screen_background_dark_transparent</item>
+    </style>
+
+
 </resources>

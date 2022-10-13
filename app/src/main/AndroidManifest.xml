@@ -24,6 +24,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".ui.activity.BypassSensorActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MaterialComponents.Translucent"
+            />
+
         <service android:name="org.eclipse.paho.android.service.MqttService"/>
     </application>
 

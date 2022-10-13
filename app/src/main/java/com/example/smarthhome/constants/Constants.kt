@@ -11,19 +11,24 @@ object Constants{
     const val NAME_DATABASE = "smarthome.db"
 
     // -------------------- MQTT CONSTANTS ALARM --------------------//
-    val LIST_TOPIC_ALARM = listOf("alarme", "setor1", "setor2", "setor3", "setor4", "error/alarme")
+    val LIST_TOPIC_ALARM = listOf("alarme", "setor1", "setor2", "setor3", "setor4")
     const val TOPIC_CMND_ALARM = "cmnd/alarme"
+    const val TOPIC_CMND_ALARM_BYPASS = "cmnd/alarme/bypass"
 
     const val NAME_SETOR_1 = "Porta Sala"
     const val NAME_SETOR_2 = "Porta Fundo"
     const val NAME_SETOR_3 = "Porta Sacada"
     const val NAME_SETOR_4 = "Janela"
 
+    const val CMND_MQTT_SENSOR_BYPASS = "\"bypassed\""
     const val CMND_MQTT_SENSOR_CLOSE = "\"fechado\""
     const val CMND_MQTT_SENSOR_OPEN = "\"aberto\""
 
+    const val CMND_API_SENSOR_BYPASS = "bypassed"
     const val CMND_API_SENSOR_CLOSE = "fechado"
     const val CMND_API_SENSOR_OPEN = "aberto"
+
+
 
     const val CMND_SENSOR_DEFAULT = "offline"
 
