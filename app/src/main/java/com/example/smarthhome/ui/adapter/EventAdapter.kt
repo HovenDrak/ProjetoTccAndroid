@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smarthhome.R
+import com.example.smarthhome.constants.Constants.LIST_NAME_SENSORS
 import com.example.smarthhome.databinding.ItemHistoryEventBinding
 import com.example.smarthhome.model.Event
 import com.example.smarthhome.constants.Constants.NAME_SETOR_1
@@ -40,7 +41,7 @@ class EventAdapter(
             val pair = configTxtAndImgEvent(event)
             val time = LocalDateTime.parse(event.date, DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")).minusHours(3)
 
-            if(pair.first!=0)
+            if (pair.first!=0)
                 binding.imgEvent.setBackgroundResource(pair.first)
 
             binding.txtEvent.text = pair.second
@@ -64,21 +65,18 @@ class EventAdapter(
                     textEvent = "${event.descricao} por ${event.user}"
                     imgEvent = R.drawable.ic_alarm_violed
                 }
-                "setor1Violed" -> {
-                    textEvent = "Sensor $NAME_SETOR_1 em Disparo"
+            }
+
+            for (i in LIST_NAME_SENSORS.indices){
+                if (event.type == "setor${i}Violed"){
+                    textEvent = "Sensor ${LIST_NAME_SENSORS[i]} em Disparo"
                     imgEvent = R.drawable.img_sensor_open
-                }
-                "setor2Violed" -> {
-                    textEvent = "Sensor $NAME_SETOR_2 em Disparo"
-                    imgEvent = R.drawable.img_sensor_open
-                }
-                "setor3Violed" -> {
-                    textEvent = "Sensor $NAME_SETOR_3 em Disparo"
-                    imgEvent = R.drawable.img_sensor_open
-                }
-                "setor4Violed" -> {
-                    textEvent = "Sensor $NAME_SETOR_4 em Disparo"
-                    imgEvent = R.drawable.img_sensor_open
+                    break
+
+                } else if (event.type == "bypass$i"){
+                    textEvent = "Sensor ${LIST_NAME_SENSORS[i]} foi Inibido por ${event.user}"
+                    imgEvent = R.drawable.img_sensor_bypass
+                    break
                 }
             }
             return Pair(imgEvent, textEvent)

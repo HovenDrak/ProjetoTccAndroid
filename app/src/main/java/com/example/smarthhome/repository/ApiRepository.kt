@@ -24,13 +24,14 @@ import java.time.format.DateTimeFormatter
 
 class ApiRepository {
 
+    private val listNameSensor: List<String> = listOf("Alarme", "1 - Porta Sala", "2 - Porta Fundo", "3 - Porta Sacada", "4 - Janela")
+    private val listNameAutomation: List<String> = listOf("Garagem", "Luz da Sala", "Luz do Quarto", "Luz da Cozinha", "Luz do Banheiro")
     private val eventsHistory: EventsHistory by inject(EventsHistory::class.java)
     private val automationCmnd: Automation by inject(Automation::class.java)
     private val eventsDao: EventsDao by inject(EventsDao::class.java)
     private val db: AppDatabase by inject(AppDatabase::class.java)
     private val alarmCmnd: Alarm by inject(Alarm::class.java)
     private val api = ServiceBuilderApi()
-    private val listNameSensor: List<String> = listOf("Alarme", "1 - Porta Sala", "2 - Porta Fundo", "3 - Porta Sacada", "4 - Janela")
 
     fun getCurrentStateHome(context: Context){
         val getAllResult: Call<List<Status>> = api.getAlarmService().getAllStatesHome()
@@ -75,7 +76,6 @@ class ApiRepository {
                 callback.finish(false, list)
             }
         })
-
         return list
     }
 
@@ -85,8 +85,12 @@ class ApiRepository {
         getAllResult.enqueue(object: Callback<List<Status>>{
             override fun onResponse(call: Call<List<Status>>, response: Response<List<Status>>) {
                 val listStatus: List<Status> = response.body()!!
-                for((count, s) in listStatus.withIndex()){
-                    db.statusDAO.updateState(s.status, count)
+
+                db.statusDAO.deleteAutomationDB()
+                if(listStatus!!.isNotEmpty()){
+                    for (i in listStatus.indices){
+                        db.statusDAO.insertAutomationDB(listStatus[i].id, listStatus[i].status, listNameAutomation[i])
+                    }
                 }
                 automationCmnd.disableDefaultView()
                 automationCmnd.updateAllStateAutomation(listStatus)

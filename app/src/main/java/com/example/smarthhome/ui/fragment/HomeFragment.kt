@@ -15,7 +15,6 @@ import com.example.smarthhome.constants.Constants.LIST_TOPIC_ALARM
 import com.example.smarthhome.constants.Constants.SEND_CMND_ARM
 import com.example.smarthhome.constants.Constants.SEND_CMND_DISARM
 import com.example.smarthhome.constants.Constants.TOPIC_CMND_ALARM
-import com.example.smarthhome.constants.Constants.TOPIC_CMND_ALARM_BYPASS
 import com.example.smarthhome.database.AppDatabase
 import com.example.smarthhome.databinding.FragmentHomeBinding
 import com.example.smarthhome.repository.ApiRepository
@@ -23,6 +22,7 @@ import com.example.smarthhome.repository.MqttRepository
 import com.example.smarthhome.service.Alarm
 import com.example.smarthhome.ui.`interface`.ResultVerifySensor
 import com.example.smarthhome.ui.activity.BypassSensorActivity
+import com.example.smarthhome.ui.activity.VisualizeSensorActivity
 import com.example.smarthhome.ui.animation.Animations
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.koin.android.ext.android.inject
@@ -44,7 +44,8 @@ class HomeFragment: Fragment() {
 
     private val db: AppDatabase by KoinJavaComponent.inject(AppDatabase::class.java)
 
-    private lateinit var startForResult: ActivityResultLauncher<Intent>
+    private lateinit var bypassSensorsLaunch: ActivityResultLauncher<Intent>
+    private lateinit var visualizeSensorLaunch: ActivityResultLauncher<Intent>
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
@@ -52,8 +53,7 @@ class HomeFragment: Fragment() {
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-        { result: ActivityResult ->
+        bypassSensorsLaunch = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if(result.resultCode == Activity.RESULT_OK){
                 cmndBypassSensors()
                 show = false
@@ -61,11 +61,41 @@ class HomeFragment: Fragment() {
                 Toast.makeText(context, "Comando de Bypass enviado com sucesso.", Toast.LENGTH_SHORT).show()
             }
         }
+
+        visualizeSensorLaunch = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if(result.resultCode == Activity.RESULT_OK)
+                Toast.makeText(context, "Comando de Bypass enviado com sucesso.", Toast.LENGTH_SHORT).show()
+        }
         alarmCmnd.setConfigAlarm(binding, context!!)
         anim.setConfig(binding, context!!)
         mqttConfig()
         configButtons()
         apiRepository.getCurrentStateHome(requireContext())
+
+
+        binding.materialCardViewSensor1.setOnClickListener {
+            val intent = Intent(requireContext(), VisualizeSensorActivity::class.java)
+            intent.putExtra("SENSOR", 1)
+            visualizeSensorLaunch.launch(intent)
+        }
+
+        binding.materialCardViewSensor2.setOnClickListener {
+            val intent = Intent(requireContext(), VisualizeSensorActivity::class.java)
+            intent.putExtra("SENSOR", 2)
+            visualizeSensorLaunch.launch(intent)
+        }
+
+        binding.materialCardViewSensor3.setOnClickListener {
+            val intent = Intent(requireContext(), VisualizeSensorActivity::class.java)
+            intent.putExtra("SENSOR", 3)
+            visualizeSensorLaunch.launch(intent)
+        }
+
+        binding.materialCardViewSensor4.setOnClickListener {
+            val intent = Intent(requireContext(), VisualizeSensorActivity::class.java)
+            intent.putExtra("SENSOR", 4)
+            visualizeSensorLaunch.launch(intent)
+        }
         return binding.root
     }
 
@@ -127,7 +157,7 @@ class HomeFragment: Fragment() {
                             else {
                                 val intent = Intent(requireContext(), BypassSensorActivity::class.java)
                                 intent.putIntegerArrayListExtra("SENSORS", list)
-                                startForResult.launch(intent)
+                                bypassSensorsLaunch.launch(intent)
                             }
                         }
                     }
@@ -182,7 +212,7 @@ class HomeFragment: Fragment() {
             }
             cmnd += "{\"setor\": ${sensorsBypass[sensorsBypass.size - 1] - 1}}"
         }
-        cmnd += "]}"
+        cmnd += "], \"user\": \"Mobile\"}"
         mqttRepository.publish("cmnd/alarme/bypass", cmnd)
     }
 }

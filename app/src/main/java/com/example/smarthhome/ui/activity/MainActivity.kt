@@ -6,9 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.smarthhome.R
-import com.example.smarthhome.constants.Constants
-import com.example.smarthhome.database.AppDatabase
-import com.example.smarthhome.database.models.AlarmDB
+import com.example.smarthhome.constants.Constants.LIST_TOPIC_ALARM
 import com.example.smarthhome.databinding.ActivityMainBinding
 import com.example.smarthhome.repository.MqttRepository
 import com.example.smarthhome.ui.fragment.AutomationFragment
@@ -16,11 +14,8 @@ import com.example.smarthhome.ui.fragment.EventsHistoryFragment
 import com.example.smarthhome.ui.fragment.HomeFragment
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.koin.android.ext.android.inject
-import org.koin.java.KoinJavaComponent
 
 class MainActivity : AppCompatActivity() {
-
-    private val db: AppDatabase by KoinJavaComponent.inject(AppDatabase::class.java)
 
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
@@ -45,7 +40,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun configMqtt() {
-        mqttRepository.connectMqtt()
+        mqttRepository.connectMqtt(LIST_TOPIC_ALARM)
     }
 
     private fun configNavigation() {

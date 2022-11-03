@@ -1,20 +1,25 @@
 package com.example.smarthhome.database.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
 import androidx.room.Query
 import com.example.smarthhome.database.models.AlarmDB
-import com.example.smarthhome.database.models.StatusDB
+import com.example.smarthhome.database.models.AutomationDB
 
 @Dao
 interface StatusDAO {
 
-    @Query("SELECT * FROM statusdb")
-    fun consultAllState(): MutableList<StatusDB>
+    @Query("SELECT * FROM automationdb")
+    fun consultAllState(): MutableList<AutomationDB>
 
-    @Query("UPDATE statusdb SET status = :state WHERE id == :id")
+    @Query("UPDATE automationdb SET status = :state WHERE id == :id")
     fun updateState(state: String, id: Int)
+
+    @Query("INSERT INTO automationdb VALUES(:id, :status, :name)")
+    fun insertAutomationDB(id: Int, status: String, name: String)
+
+    @Query("DELETE FROM automationdb")
+    fun deleteAutomationDB()
+
 
     @Query("INSERT INTO alarmdb VALUES(:id, :name, :status, :showName, :bypass)")
     fun insertStatusAlarm(id: Int, name: String, status: String, showName: String, bypass: Int)

@@ -8,12 +8,17 @@ import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.smarthhome.R
+import com.example.smarthhome.constants.Constants.CMND_API_GARAGE_CLOSE
+import com.example.smarthhome.constants.Constants.CMND_API_GARAGE_OPEN
 import com.example.smarthhome.constants.Constants.CMND_LIGHT_OFF
 import com.example.smarthhome.constants.Constants.CMND_LIGHT_ON
-import com.example.smarthhome.constants.Constants.LIST_TOPIC_LIGHT
+import com.example.smarthhome.constants.Constants.CMND_MQTT_GARAGE_CLOSE
+import com.example.smarthhome.constants.Constants.CMND_MQTT_GARAGE_OPEN
+import com.example.smarthhome.constants.Constants.LIST_TOPIC_AUTOMATION
+import com.example.smarthhome.constants.Constants.TOPIC_LIGHT
 import com.example.smarthhome.database.AppDatabase
+import com.example.smarthhome.database.models.AutomationDB
 import com.example.smarthhome.databinding.FragmentAutomationBinding
-import com.example.smarthhome.database.models.StatusDB
 import com.example.smarthhome.repository.ApiRepository
 import com.example.smarthhome.repository.MqttRepository
 import com.example.smarthhome.service.Automation
@@ -33,7 +38,9 @@ class AutomationFragment : Fragment() {
     private val mqttRepository = MqttRepository(mqttClient)
     private val apiRepository = ApiRepository()
 
-    private var listStatus: List<StatusDB> = listOf()
+    private var listStatus: List<AutomationDB> = listOf()
+    private var showIlumination = true
+    private var showGarage = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,43 +51,69 @@ class AutomationFragment : Fragment() {
         apiRepository.getCurrentStateAutomation(requireContext())
         mqttConfig()
         configButtons()
+
+        binding.materialCardIlumination.setOnClickListener {
+            binding.lineSeparatorLighting.visibility = if(showIlumination) View.VISIBLE else View.GONE
+            binding.scrollViewILighting.visibility = if(showIlumination) View.VISIBLE else View.GONE
+            binding.arrowUpDownIlumination.setImageDrawable(
+                if(showIlumination) requireContext().getDrawable(R.drawable.ic_arrow_up)
+                else requireContext().getDrawable(R.drawable.ic_arrow_down))
+            showIlumination = !showIlumination
+        }
+
+        binding.materialCardGarage.setOnClickListener {
+            binding.constraintLayoutGarage.visibility = if(showGarage) View.VISIBLE else View.GONE
+            binding.lineSeparatorGarage.visibility = if(showGarage) View.VISIBLE else View.GONE
+            binding.arrowUpDownGarage.setImageDrawable(
+                if(showGarage) requireContext().getDrawable(R.drawable.ic_arrow_up)
+                else requireContext().getDrawable(R.drawable.ic_arrow_down))
+            showGarage = !showGarage
+        }
         return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mqttRepository.unsubscribeTopics(LIST_TOPIC_LIGHT)
+        mqttRepository.unsubscribeTopics(LIST_TOPIC_AUTOMATION)
+        showIlumination = true
+        showGarage = true
         _binding = null
     }
 
     private fun mqttConfig() {
         mqttRepository.setFragmentCallback(1)
-        mqttRepository.subscribeTopics(LIST_TOPIC_LIGHT)
+        mqttRepository.subscribeTopics(LIST_TOPIC_AUTOMATION)
     }
 
     private fun configButtons() {
         binding.btnLight1.setOnClickListener {
             listStatus = db.statusDAO.consultAllState()
             animationBounce(binding.cardMaterialLamp1)
-            sendCmnd(1, LIST_TOPIC_LIGHT[0])
+            sendCmndLight(1)
         }
 
         binding.btnLight2.setOnClickListener {
             listStatus = db.statusDAO.consultAllState()
             animationBounce(binding.cardMaterialLamp2)
-            sendCmnd(2, LIST_TOPIC_LIGHT[1])
+            sendCmndLight(2)
         }
 
         binding.btnLight3.setOnClickListener {
             listStatus = db.statusDAO.consultAllState()
             animationBounce(binding.cardMaterialLamp3)
-            sendCmnd(3, LIST_TOPIC_LIGHT[2])
+            sendCmndLight(3)
         }
 
         binding.btnLight4.setOnClickListener {
             listStatus = db.statusDAO.consultAllState()
             animationBounce(binding.cardMaterialLamp4)
-            sendCmnd(4, LIST_TOPIC_LIGHT[3])
+            sendCmndLight(4)
+        }
+
+        binding.btnGarage.setOnClickListener{
+            listStatus = db.statusDAO.consultAllState()
+            animationBounce(binding.cardMaterialGarage)
+            sendCmndGarage(LIST_TOPIC_AUTOMATION[4])
         }
     }
 
@@ -89,23 +122,40 @@ class AutomationFragment : Fragment() {
             .loadAnimation(this.context, R.anim.bounce))
     }
 
-    private fun sendCmnd(light: Int, topicLight: String){
+    private fun sendCmndLight(light: Int){
         if(listStatus[light].status == CMND_LIGHT_ON){
-            mqttRepository.publish("cmnd/$topicLight", CMND_LIGHT_OFF)
+            mqttRepository.publish("cmnd/$TOPIC_LIGHT", "{\"light\": ${light-1}, \"newState\": \"$CMND_LIGHT_OFF\", \"user\": \"Mobile\"}")
             Toast.makeText(context, "Comando enviado com sucesso.", Toast.LENGTH_SHORT).show()
+
         } else if(listStatus[light].status == CMND_LIGHT_OFF){
-            mqttRepository.publish("cmnd/$topicLight", CMND_LIGHT_ON)
+            mqttRepository.publish("cmnd/$TOPIC_LIGHT", "{\"light\": ${light-1}, \"newState\": \"$CMND_LIGHT_ON\", \"user\": \"Mobile\"}")
             Toast.makeText(context, "Comando enviado com sucesso.", Toast.LENGTH_SHORT).show()
         }
         animationSendCmnd(light)
     }
+
+    private fun sendCmndGarage(topicGarage: String){
+        if (!mqttClient.isConnected)
+            mqttRepository.connectMqtt(LIST_TOPIC_AUTOMATION)
+
+        if (listStatus[0].status == CMND_API_GARAGE_OPEN){
+            mqttRepository.publish("cmnd/$topicGarage", "{\"newState\": $CMND_MQTT_GARAGE_CLOSE, \"user\": \"Mobile\"}")
+            Toast.makeText(context, "Comando enviado com sucesso.", Toast.LENGTH_SHORT).show()
+
+        } else if(listStatus[0].status == CMND_API_GARAGE_CLOSE){
+            mqttRepository.publish("cmnd/$topicGarage", "{\"newState\": $CMND_MQTT_GARAGE_OPEN, \"user\": \"Mobile\"}")
+            Toast.makeText(context, "Comando enviado com sucesso.", Toast.LENGTH_SHORT).show()
+        }
+        animationSendCmnd(5)
+    }
     
-    private fun animationSendCmnd(light: Int){
-        when(light){
+    private fun animationSendCmnd(device: Int){
+        when(device){
             1 -> binding.btnLight1.startAnimation(automationCmnd.configAlphaAnimation())
             2 -> binding.btnLight2.startAnimation(automationCmnd.configAlphaAnimation())
             3 -> binding.btnLight3.startAnimation(automationCmnd.configAlphaAnimation())
             4 -> binding.btnLight4.startAnimation(automationCmnd.configAlphaAnimation())
+            5 -> binding.btnGarage.startAnimation(automationCmnd.configAlphaAnimation())
         }
     }
 }

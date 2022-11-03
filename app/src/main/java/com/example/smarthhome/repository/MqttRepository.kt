@@ -1,13 +1,15 @@
 package com.example.smarthhome.repository
 
 import android.util.Log
-import com.example.smarthhome.constants.Constants
+import com.example.smarthhome.R
+import com.example.smarthhome.constants.Constants.BACKGROUND_COLOR_LIGHT_OFF
+import com.example.smarthhome.constants.Constants.BACKGROUND_COLOR_LIGHT_ON
+import com.example.smarthhome.constants.Constants.CMND_API_GARAGE_CLOSE
+import com.example.smarthhome.constants.Constants.CMND_API_GARAGE_OPEN
 import com.example.smarthhome.constants.Constants.CMND_API_SENSOR_BYPASS
-import com.example.smarthhome.constants.Constants.CMND_MQTT_ARM
 import com.example.smarthhome.constants.Constants.ERROR_LOAD_STATE_MQTT
-import com.example.smarthhome.constants.Constants.ERROR_SEND_CMND
 import com.example.smarthhome.constants.Constants.LIST_TOPIC_ALARM
-import com.example.smarthhome.constants.Constants.LIST_TOPIC_LIGHT
+import com.example.smarthhome.constants.Constants.LIST_TOPIC_AUTOMATION
 import com.example.smarthhome.constants.Constants.PASSWORD_MQTT
 import com.example.smarthhome.constants.Constants.TAG_MQTT
 import com.example.smarthhome.constants.Constants.USER_MQTT
@@ -27,12 +29,12 @@ class MqttRepository(private val mqttClient: MqttAndroidClient) {
     private var countMessageAutomation = 0
     private var countMessageAlarm = 0
 
-    fun connectMqtt() {
+    fun connectMqtt(listTopics: List<String>) {
         try {
             mqttClient.connect(setMqttAuthentication(), null, object : IMqttActionListener {
                 override fun onSuccess(asyncActionToken: IMqttToken?) {
                     Log.d(TAG_MQTT, "Connection success")
-                    subscribeTopics(LIST_TOPIC_ALARM)
+                    subscribeTopics(listTopics)
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
@@ -73,33 +75,38 @@ class MqttRepository(private val mqttClient: MqttAndroidClient) {
     private val callbackAutomation = object: MqttCallback {
         override fun connectionLost(cause: Throwable?) {
             Log.e(TAG_MQTT, "Connection MQTT lost cause: $cause")
-            connectMqtt()
+            connectMqtt(LIST_TOPIC_ALARM)
         }
 
         override fun messageArrived(topic: String?, message: MqttMessage?) {
             countMessageAlarm += 1
-            Log.d(TAG_MQTT,
-                "Received message ${countMessageAutomation}: ${message.toString()} from topic: $topic"
-            )
-            val msg = message.toString()
+            val msg = message.toString().replace("\"", "")
+            Log.d(TAG_MQTT, "Received message ${countMessageAutomation}: ${message.toString()} from topic: $topic")
             when (topic) {
-                "status/${LIST_TOPIC_LIGHT[0]}" -> {
+                "status/${LIST_TOPIC_AUTOMATION[0]}" -> {
                     automationCmnd.updateStateLight(1, msg)
-                    db.statusDAO.updateState(msg.replace("\"", ""), 1)
+                    db.statusDAO.updateState(msg, 2)
                 }
-                "status/${LIST_TOPIC_LIGHT[1]}" -> {
+                "status/${LIST_TOPIC_AUTOMATION[1]}" -> {
                     automationCmnd.updateStateLight(2, msg)
-                    db.statusDAO.updateState(msg.replace("\"", ""), 2)
+                    db.statusDAO.updateState(msg, 3)
                 }
-                "status/${LIST_TOPIC_LIGHT[2]}" -> {
+                "status/${LIST_TOPIC_AUTOMATION[2]}" -> {
                     automationCmnd.updateStateLight(3, msg)
-                    db.statusDAO.updateState(msg.replace("\"", ""), 3)
+                    db.statusDAO.updateState(msg, 4)
                 }
-                "status/${LIST_TOPIC_LIGHT[3]}" -> {
+                "status/${LIST_TOPIC_AUTOMATION[3]}" -> {
                     automationCmnd.updateStateLight(4, msg)
-                    db.statusDAO.updateState(msg.replace("\"", ""), 4)
+                    db.statusDAO.updateState(msg, 5)
                 }
+                "status/${LIST_TOPIC_AUTOMATION[4]}" -> {
+                    when(msg) {
+                        CMND_API_GARAGE_OPEN -> automationCmnd.updateGarage(R.drawable.ic_garage_open, msg, BACKGROUND_COLOR_LIGHT_ON)
+                        CMND_API_GARAGE_CLOSE -> automationCmnd.updateGarage(R.drawable.ic_garage_closed, msg, BACKGROUND_COLOR_LIGHT_OFF)
+                    }
+                    db.statusDAO.updateState(msg, 1)
 
+                }
                 else -> Log.d(TAG_MQTT, ERROR_LOAD_STATE_MQTT)
             }
         }
@@ -111,14 +118,12 @@ class MqttRepository(private val mqttClient: MqttAndroidClient) {
     private val callbackAlarm = object: MqttCallback {
         override fun connectionLost(cause: Throwable?) {
             Log.e(TAG_MQTT, "Connection MQTT lost cause: $cause")
-            connectMqtt()
+            connectMqtt(LIST_TOPIC_AUTOMATION)
         }
 
         override fun messageArrived(topic: String?, message: MqttMessage?) {
             countMessageAlarm += 1
-            Log.d(
-                TAG_MQTT, "Received message ${countMessageAlarm}: ${message.toString()} from topic: $topic"
-            )
+            Log.d(TAG_MQTT, "Received message ${countMessageAlarm}: ${message.toString()} from topic: $topic")
             val msg = message.toString().replace("\"", "")
 
             when (topic) {
@@ -160,9 +165,7 @@ class MqttRepository(private val mqttClient: MqttAndroidClient) {
                     }
                 })
             }
-        } catch (e: MqttException) {
-            e.printStackTrace()
-        }
+        } catch (e: MqttException) { e.printStackTrace() }
     }
 
     private fun unsubscribe(topic: String){
@@ -176,9 +179,7 @@ class MqttRepository(private val mqttClient: MqttAndroidClient) {
                     Log.d(TAG_MQTT, "Failed to unsubscribe $topic")
                 }
             })
-        } catch (e: MqttException) {
-            e.printStackTrace()
-        }
+        } catch (e: MqttException) { e.printStackTrace() }
     }
 
     fun publish(topic: String, msg: String, qos: Int = 1, retained: Boolean = false) {
@@ -195,9 +196,7 @@ class MqttRepository(private val mqttClient: MqttAndroidClient) {
                     Log.d(TAG_MQTT, "Failed to publish $msg to $topic")
                 }
             })
-        } catch (e: MqttException) {
-            e.printStackTrace()
-        }
+        } catch (e: MqttException) { e.printStackTrace() }
     }
     fun disconnect() {
         try {
@@ -209,8 +208,6 @@ class MqttRepository(private val mqttClient: MqttAndroidClient) {
                     Log.d(TAG_MQTT, "Failed to disconnect")
                 }
             })
-        } catch (e: MqttException) {
-            e.printStackTrace()
-        }
+        } catch (e: MqttException) { e.printStackTrace() }
     }
 }

@@ -38,10 +38,9 @@ class EventsHistoryFragment : Fragment(){
         eventsHistory.configAdapter(eventsDao.getAllEvents())
 
         val dateNow = LocalDateTime.now()
-
         apiRepository.getDayLog(requireContext(), dateNow.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")))
 
-        val listenner = OnDateSetListener { view, year, month, dayOfMonth ->
+        val listenner = OnDateSetListener {view, year, month, dayOfMonth ->
                 val newMonth = if (month + 1 < 10) "0${month + 1}" else month + 1
                 val newDay = if (dayOfMonth < 10) "0$dayOfMonth" else dayOfMonth
                 dateSelect = "$newDay-$newMonth-$year 00:00:00"

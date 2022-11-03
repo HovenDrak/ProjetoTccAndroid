@@ -15,6 +15,7 @@ object Constants{
     const val TOPIC_CMND_ALARM = "cmnd/alarme"
     const val TOPIC_CMND_ALARM_BYPASS = "cmnd/alarme/bypass"
 
+    val LIST_NAME_SENSORS = arrayListOf("Porta Sala", "Porta Fundo", "Porta Sacada", "Janela")
     const val NAME_SETOR_1 = "Porta Sala"
     const val NAME_SETOR_2 = "Porta Fundo"
     const val NAME_SETOR_3 = "Porta Sacada"
@@ -27,10 +28,12 @@ object Constants{
     const val CMND_API_SENSOR_BYPASS = "bypassed"
     const val CMND_API_SENSOR_CLOSE = "fechado"
     const val CMND_API_SENSOR_OPEN = "aberto"
-
-
-
     const val CMND_SENSOR_DEFAULT = "offline"
+
+    const val CMND_MQTT_GARAGE_CLOSE = CMND_MQTT_SENSOR_CLOSE
+    const val CMND_MQTT_GARAGE_OPEN = CMND_MQTT_SENSOR_OPEN
+    const val CMND_API_GARAGE_CLOSE = CMND_API_SENSOR_CLOSE
+    const val CMND_API_GARAGE_OPEN = CMND_API_SENSOR_OPEN
 
     const val CMND_MQTT_VIOLED = "\"disparado\""
     const val CMND_MQTT_DISARM = "\"desarmado\""
@@ -44,7 +47,8 @@ object Constants{
     const val CMND_API_ARM = "armado"
 
     // -------------------- MQTT CONSTANTS AUTOMATION --------------------//
-    val LIST_TOPIC_LIGHT = listOf("light1", "light2", "light3", "light4")
+    val LIST_TOPIC_AUTOMATION = listOf("light1", "light2", "light3", "light4","garage")
+    const val TOPIC_LIGHT = "light"
 
     const val CMND_MQTT_LIGHT_OFF = "\"desligado\""
     const val CMND_MQTT_LIGHT_ON = "\"ligado\""

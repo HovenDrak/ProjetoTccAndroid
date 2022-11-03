@@ -7,9 +7,9 @@ import androidx.room.RoomDatabase
 import com.example.smarthhome.constants.Constants.NAME_DATABASE
 import com.example.smarthhome.database.dao.StatusDAO
 import com.example.smarthhome.database.models.AlarmDB
-import com.example.smarthhome.database.models.StatusDB
+import com.example.smarthhome.database.models.AutomationDB
 
-@Database(entities = [StatusDB::class, AlarmDB::class], version = 8, exportSchema = false)
+@Database(entities = [AutomationDB::class, AlarmDB::class], version = 9, exportSchema = false)
 abstract class AppDatabase: RoomDatabase() {
 
     abstract val statusDAO: StatusDAO

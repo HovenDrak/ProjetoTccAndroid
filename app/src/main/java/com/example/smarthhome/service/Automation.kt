@@ -10,6 +10,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import com.example.smarthhome.R
+import com.example.smarthhome.constants.Constants
 import com.example.smarthhome.databinding.FragmentAutomationBinding
 import com.example.smarthhome.model.Status
 import com.example.smarthhome.constants.Constants.CMND_LIGHT_OFF
@@ -20,6 +21,10 @@ import com.example.smarthhome.constants.Constants.CMND_MQTT_LIGHT_ON
 import com.example.smarthhome.constants.Constants.BACKGROUND_COLOR_LIGHT_OFFLINE
 import com.example.smarthhome.constants.Constants.BACKGROUND_COLOR_LIGHT_OFF
 import com.example.smarthhome.constants.Constants.BACKGROUND_COLOR_LIGHT_ON
+import com.example.smarthhome.constants.Constants.CMND_API_GARAGE_CLOSE
+import com.example.smarthhome.constants.Constants.CMND_API_GARAGE_OPEN
+import com.example.smarthhome.constants.Constants.CMND_MQTT_GARAGE_CLOSE
+import com.example.smarthhome.constants.Constants.CMND_MQTT_GARAGE_OPEN
 import com.example.smarthhome.constants.Constants.TEXT_LIGHT_OFFLINE
 import com.example.smarthhome.constants.Constants.TEXT_LIGHT_OFF
 import com.example.smarthhome.constants.Constants.TEXT_LIGHT_ON
@@ -68,10 +73,25 @@ class Automation {
     }
 
     fun updateAllStateAutomation(list: List<Status>?){
+
+        when(list?.get(0)?.status){
+            CMND_API_GARAGE_OPEN -> updateGarage(R.drawable.ic_garage_open, list[0].status, BACKGROUND_COLOR_LIGHT_ON)
+            CMND_MQTT_GARAGE_OPEN -> updateGarage(R.drawable.ic_garage_open, list[0].status, BACKGROUND_COLOR_LIGHT_ON)
+            CMND_API_GARAGE_CLOSE -> updateGarage(R.drawable.ic_garage_closed, list[0].status, BACKGROUND_COLOR_LIGHT_OFF)
+            CMND_MQTT_GARAGE_CLOSE -> updateGarage(R.drawable.ic_garage_closed, list[0].status, BACKGROUND_COLOR_LIGHT_OFF)
+        }
+
         for (i in 1..4) {
             Log.i("Automation", "update Light: $i Status: ${list!![i].status}")
             updateStateLight(i, list[i].status)
         }
+    }
+
+    fun updateGarage(img: Int, state: String, color: String){
+        binding.cardMaterialGarage.setCardBackgroundColor(Color.parseColor(color))
+        binding.btnGarage.startAnimation(AlphaAnimation(0.0f, 0.0f))
+        binding.btnGarage.setBackgroundResource(img)
+        binding.txtStateGarage.text = state
     }
 
     fun updateStateLight(light: Int, state: String){
