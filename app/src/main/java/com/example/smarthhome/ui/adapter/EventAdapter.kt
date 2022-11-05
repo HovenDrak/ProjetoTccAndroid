@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smarthhome.R
 import com.example.smarthhome.constants.Constants.LIST_NAME_SENSORS
+import com.example.smarthhome.constants.Constants.LIST_TOPIC_AUTOMATION
 import com.example.smarthhome.databinding.ItemHistoryEventBinding
 import com.example.smarthhome.model.Event
 import com.example.smarthhome.constants.Constants.NAME_SETOR_1
@@ -79,6 +80,20 @@ class EventAdapter(
                     break
                 }
             }
+
+            for (i in LIST_TOPIC_AUTOMATION.indices){
+                if (event.type == "light${i}on"){
+                    textEvent = "${LIST_TOPIC_AUTOMATION[i]} Ligada por ${event.user}"
+                    imgEvent = R.drawable.light_on
+                    break
+
+                } else if (event.type == "light${i}off"){
+                    textEvent = "${LIST_TOPIC_AUTOMATION[i]} Desligada por ${event.user}"
+                    imgEvent = R.drawable.light_off
+                    break
+                }
+            }
+
             return Pair(imgEvent, textEvent)
         }
     }

@@ -91,7 +91,7 @@ class Automation {
         binding.cardMaterialGarage.setCardBackgroundColor(Color.parseColor(color))
         binding.btnGarage.startAnimation(AlphaAnimation(0.0f, 0.0f))
         binding.btnGarage.setBackgroundResource(img)
-        binding.txtStateGarage.text = state
+        binding.txtStateGarage.text = state.substring(0, 1).uppercase() + state.substring(1)
     }
 
     fun updateStateLight(light: Int, state: String){

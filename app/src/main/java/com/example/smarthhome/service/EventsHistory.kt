@@ -51,4 +51,11 @@ class EventsHistory {
     fun getAdapter(): EventAdapter {
         return this.adapter
     }
+
+    fun activeLoading(){
+        binding.progressBarEventsHistory.visibility = View.VISIBLE
+        binding.recyclerViewEvents.visibility = View.GONE
+        binding.txtNotFoundEvents.visibility = View.GONE
+        binding.txtDayEvent.visibility = View.GONE
+    }
 }

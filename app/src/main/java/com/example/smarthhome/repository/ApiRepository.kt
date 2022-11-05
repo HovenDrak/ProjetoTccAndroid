@@ -21,6 +21,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.collections.ArrayList
 
 class ApiRepository {
 
@@ -87,7 +88,7 @@ class ApiRepository {
                 val listStatus: List<Status> = response.body()!!
 
                 db.statusDAO.deleteAutomationDB()
-                if(listStatus!!.isNotEmpty()){
+                if(listStatus.isNotEmpty()){
                     for (i in listStatus.indices){
                         db.statusDAO.insertAutomationDB(listStatus[i].id, listStatus[i].status, listNameAutomation[i])
                     }
@@ -101,15 +102,51 @@ class ApiRepository {
         })
     }
 
-    fun getDayLog(context: Context, day: String){
-        val getLogDayResult: Call<List<Event>> = api.getAlarmService().getEvents()
+//    fun getAllLog(context: Context, day: String){
+//        val getLogAllResult: Call<List<Event>> = api.getAlarmService().getEvents()
+//
+//        getLogAllResult.enqueue(object: Callback<List<Event>>{
+//            override fun onResponse(call: Call<List<Event>>, response: Response<List<Event>>) {
+//                response.body()?.let {
+//                    eventsDao.clearAndAddList(it)
+//                    val events = mutableListOf<Event>()
+//                    val dateNow = LocalDateTime.parse(day, DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))
+//                    dateNow.minusHours(3)
+//
+//                    eventsHistory.configDateEvent(dateNow.toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyy")), true)
+//
+//                    for (log in it){
+//                        val data = LocalDateTime.parse(log.date, DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))
+//                        data.minusHours(3)
+//
+//                        if (data.dayOfMonth == dateNow.dayOfMonth && data.monthValue == dateNow.monthValue){
+//                            events.add(log)
+//                        }
+//                    }
+//                    if(events.isEmpty())
+//                        eventsHistory.activeNotFoundEvents()
+//                    else
+//                        eventsHistory.activeWidgetsView()
+//                    eventsHistory.getAdapter().refresh(events)
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<List<Event>>, t: Throwable) {
+//                Toast.makeText(context, ERROR_LOAD_API, Toast.LENGTH_LONG).show()
+//                Log.i("Error HTTP", t.toString())
+//            }
+//        })
+//    }
 
-        getLogDayResult.enqueue(object: Callback<List<Event>>{
+    fun getDayLog(context: Context, date: String){
+        val getLogDayResult: Call<List<Event>> = api.getAlarmService().getDayEvents(date.substring(0, 10))
+
+        getLogDayResult.enqueue(object : Callback<List<Event>>{
             override fun onResponse(call: Call<List<Event>>, response: Response<List<Event>>) {
-                response.body()?.let {
+                response.body()!!.let {
                     eventsDao.clearAndAddList(it)
                     val events = mutableListOf<Event>()
-                    val dateNow = LocalDateTime.parse(day, DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))
+                    val dateNow = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))
                     dateNow.minusHours(3)
 
                     eventsHistory.configDateEvent(dateNow.toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyy")), true)
