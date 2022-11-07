@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smarthhome.R
+import com.example.smarthhome.constants.Constants.LIST_NAMES_AUTOMATION
 import com.example.smarthhome.constants.Constants.LIST_NAME_SENSORS
 import com.example.smarthhome.constants.Constants.LIST_TOPIC_AUTOMATION
 import com.example.smarthhome.databinding.ItemHistoryEventBinding
@@ -66,6 +67,14 @@ class EventAdapter(
                     textEvent = "${event.descricao} por ${event.user}"
                     imgEvent = R.drawable.ic_alarm_violed
                 }
+                "openGarage" -> {
+                    textEvent = "Portão aberto por ${event.user}"
+                    imgEvent = R.drawable.ic_garage_open
+                }
+                "closeGarage" -> {
+                    textEvent = "Portão fechado por ${event.user}"
+                    imgEvent = R.drawable.ic_garage_closed
+                }
             }
 
             for (i in LIST_NAME_SENSORS.indices){
@@ -83,12 +92,12 @@ class EventAdapter(
 
             for (i in LIST_TOPIC_AUTOMATION.indices){
                 if (event.type == "light${i}on"){
-                    textEvent = "${LIST_TOPIC_AUTOMATION[i]} Ligada por ${event.user}"
+                    textEvent = "${LIST_NAMES_AUTOMATION[i]} Ligada por ${event.user}"
                     imgEvent = R.drawable.light_on
                     break
 
                 } else if (event.type == "light${i}off"){
-                    textEvent = "${LIST_TOPIC_AUTOMATION[i]} Desligada por ${event.user}"
+                    textEvent = "${LIST_NAMES_AUTOMATION[i]} Desligada por ${event.user}"
                     imgEvent = R.drawable.light_off
                     break
                 }

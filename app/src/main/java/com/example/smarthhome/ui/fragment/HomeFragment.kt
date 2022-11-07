@@ -42,21 +42,18 @@ class HomeFragment: Fragment() {
     private val apiRepository = ApiRepository()
     private var show = false
 
+    private lateinit var visualizeSensorLaunch: ActivityResultLauncher<Intent>
+    private lateinit var bypassSensorsLaunch: ActivityResultLauncher<Intent>
+
     private val db: AppDatabase by KoinJavaComponent.inject(AppDatabase::class.java)
 
-    private lateinit var bypassSensorsLaunch: ActivityResultLauncher<Intent>
-    private lateinit var visualizeSensorLaunch: ActivityResultLauncher<Intent>
-
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         bypassSensorsLaunch = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if(result.resultCode == Activity.RESULT_OK){
-                cmndBypassSensors()
                 show = false
+                cmndBypassSensors()
                 anim.animationSendCmnd(true)
                 Toast.makeText(context, "Comando de Bypass enviado com sucesso.", Toast.LENGTH_SHORT).show()
             }
@@ -66,13 +63,34 @@ class HomeFragment: Fragment() {
             if(result.resultCode == Activity.RESULT_OK)
                 Toast.makeText(context, "Comando de Bypass enviado com sucesso.", Toast.LENGTH_SHORT).show()
         }
+
         alarmCmnd.setConfigAlarm(binding, context!!)
         anim.setConfig(binding, context!!)
         mqttConfig()
         configButtons()
         apiRepository.getCurrentStateHome(requireContext())
 
+        return binding.root
+    }
 
+    override fun onDestroyView() {
+        mqttRepository.unsubscribeTopics(LIST_TOPIC_ALARM)
+        _binding = null
+        show = false
+        super.onDestroyView()
+    }
+
+    override fun onResume() {
+        show = false
+        super.onResume()
+    }
+
+    private fun mqttConfig() {
+        mqttRepository.setFragmentCallback(0)
+        mqttRepository.subscribeTopics(LIST_TOPIC_ALARM)
+    }
+
+    private fun configButtons() {
         binding.materialCardViewSensor1.setOnClickListener {
             val intent = Intent(requireContext(), VisualizeSensorActivity::class.java)
             intent.putExtra("SENSOR", 1)
@@ -96,65 +114,34 @@ class HomeFragment: Fragment() {
             intent.putExtra("SENSOR", 4)
             visualizeSensorLaunch.launch(intent)
         }
-        return binding.root
-    }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mqttRepository.unsubscribeTopics(LIST_TOPIC_ALARM)
-        _binding = null
-        show = false
-    }
-
-    override fun onResume() {
-        super.onResume()
-        show = false
-    }
-
-    private fun mqttConfig() {
-        mqttRepository.setFragmentCallback(0)
-        mqttRepository.subscribeTopics(LIST_TOPIC_ALARM)
-    }
-
-    private fun configButtons() {
-        configButtonActiveDisarm()
-        configButtonActiveArm()
-        configButtonVioled()
-        configButtonDisarm()
-        configButtonArm()
-    }
-
-    private fun configButtonActiveDisarm() {
-        binding.btnActiveDesarm.setOnClickListener{
+        binding.materialCardActiveDisarm.setOnClickListener{
             if(show) {
-                anim.animationShowCmndButtons(false)
-                anim.animationBounce(binding.btnActiveDesarm, false)
+                show = false
                 sendCommand(SEND_CMND_DISARM)
                 anim.animationSendCmnd(false)
-                show = false
+                anim.animationShowCmndButtons(false)
+                anim.animationBounce(binding.materialCardActiveDisarm, false)
                 Toast.makeText(context, "Comando de Desarme enviado com sucesso.", Toast.LENGTH_SHORT).show()
             }
         }
-    }
 
-    private fun configButtonActiveArm() {
-        binding.btnActiveArm.setOnClickListener{
+        binding.materialCardActiveArm.setOnClickListener{
             if(show) {
                 apiRepository.getCurrentStateHome(context!!)
                 anim.animationShowCmndButtons(false)
-                anim.animationBounce(binding.btnActiveArm, false)
+                anim.animationBounce(binding.materialCardActiveArm, false)
 
-                apiRepository.verifySensorArm(requireContext(), callback = object :
-                    ResultVerifySensor {
+                apiRepository.verifySensorArm(requireContext(), callback = object : ResultVerifySensor {
                     override fun finish(ok: Boolean, list: ArrayList<Int>) {
-                        if (ok){
+                        if (ok) {
                             if (list.isEmpty()){
+                                show = false
                                 sendCommand(SEND_CMND_ARM)
                                 anim.animationSendCmnd(true)
-                                show = false
                                 Toast.makeText(context, "Comando de Arme enviado com sucesso.", Toast.LENGTH_SHORT).show()
-                            }
-                            else {
+
+                            } else {
                                 val intent = Intent(requireContext(), BypassSensorActivity::class.java)
                                 intent.putIntegerArrayListExtra("SENSORS", list)
                                 bypassSensorsLaunch.launch(intent)
@@ -164,25 +151,19 @@ class HomeFragment: Fragment() {
                 })
             }
         }
-    }
 
-    private fun configButtonVioled(){
-        binding.btnVioled.setOnClickListener{
+        binding.materialCardVioled.setOnClickListener{
             anim.animationBounce(binding.btnVioled, true)
             show = configAnimation()
         }
-    }
 
-    private fun configButtonArm() {
-        binding.btnArm.setOnClickListener{
-            anim.animationBounce(binding.btnArm, false)
+        binding.materialCardArm.setOnClickListener{
+            anim.animationBounce(binding.materialCardArm, false)
             show = configAnimation()
         }
-    }
 
-    private fun configButtonDisarm() {
-        binding.btnDisarm.setOnClickListener{
-            anim.animationBounce(binding.btnDisarm, false)
+        binding.materialCardDisarm.setOnClickListener{
+            anim.animationBounce(binding.materialCardDisarm, false)
             show = configAnimation()
         }
     }
@@ -196,8 +177,8 @@ class HomeFragment: Fragment() {
             false
         }
 
-    private fun sendCommand(cmnd: String){
-        mqttRepository.publish(TOPIC_CMND_ALARM, cmnd)
+    private fun sendCommand(cmd: String){
+        mqttRepository.publish(TOPIC_CMND_ALARM, cmd)
     }
 
     private fun cmndBypassSensors() {
@@ -206,6 +187,7 @@ class HomeFragment: Fragment() {
 
         if (sensorsBypass.size == 1) {
             cmnd += "{\"setor\": ${sensorsBypass[0] - 1}}"
+
         } else if (sensorsBypass.size > 1) {
             for (i in 0..sensorsBypass.size - 2) {
                 cmnd += "{\"setor\": ${sensorsBypass[i] - 1}},"

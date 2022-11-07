@@ -12,7 +12,6 @@ import com.example.smarthhome.service.Alarm
 import org.koin.java.KoinJavaComponent.inject
 
 class Animations {
-
     private lateinit var binding: FragmentHomeBinding
     private lateinit var context: Context
 
@@ -26,11 +25,10 @@ class Animations {
     fun animationShowCmndButtons(show: Boolean) {
         val animation: Animation = object : Animation() {
             override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
-                if(show){
-                    binding.constraintCommand.layoutParams.height = (390 * interpolatedTime).toInt()
-                } else{
-                    binding.constraintCommand.layoutParams.height = (390 - (interpolatedTime * 370)).toInt()
-                }
+                if(show)
+                    binding.constraintCommand.layoutParams.height = (450 * interpolatedTime).toInt()
+                else
+                    binding.constraintCommand.layoutParams.height = (450 - (interpolatedTime * 450)).toInt()
                 binding.constraintCommand.requestLayout()
             }
         }
@@ -39,33 +37,28 @@ class Animations {
     }
 
     fun animationSendCmnd(cmndArm: Boolean){
-        if(cmndArm){
+        if(cmndArm)
             binding.btnDisarm.startAnimation(alarmCmnd.configAlphaAnimation(false))
-        } else{
-            if(binding.btnVioled.visibility == View.GONE) {
+        else
+            if(binding.btnVioled.visibility == View.GONE)
                 binding.btnArm.startAnimation(alarmCmnd.configAlphaAnimation(false))
-            }
-        }
     }
 
-    fun animationBounce(imageButton: ImageButton, violed: Boolean){
-
+    fun animationBounce(view: View, violed: Boolean){
         val animationBounce: Animation = AnimationUtils.loadAnimation(this.context, R.anim.bounce)
         animationBounce.setAnimationListener(object: Animation.AnimationListener {
             override fun onAnimationStart(p0: Animation?) {
-                imageButton.startAnimation(animationBounce)
+                view.startAnimation(animationBounce)
             }
 
             override fun onAnimationEnd(p0: Animation?) {
                 if(violed){
-                    imageButton.startAnimation(alarmCmnd.configAlphaAnimation(violed))
+                    view.startAnimation(alarmCmnd.configAlphaAnimation(violed))
                 }
             }
 
-            override fun onAnimationRepeat(p0: Animation?) {
-                TODO("Not yet implemented")
-            }
+            override fun onAnimationRepeat(p0: Animation?) {}
         })
-        imageButton.startAnimation(animationBounce)
+        view.startAnimation(animationBounce)
     }
 }

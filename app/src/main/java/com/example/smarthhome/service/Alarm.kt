@@ -38,94 +38,67 @@ class Alarm{
     }
 
     private fun stateArm() {
+        binding.materialCardDisarm.startAnimation(AlphaAnimation(0.0f, 0.0f))
+        binding.materialCardDisarm.visibility = View.GONE
 
-        binding.btnDisarm.startAnimation(AlphaAnimation(0.0f, 0.0f))
-        binding.btnDisarm.visibility = View.GONE
-        binding.txtDesarm.visibility = View.GONE
-
-        binding.btnArm.visibility = View.VISIBLE
-        binding.txtArm.visibility = View.VISIBLE
-
-        binding.btnActiveArm.visibility = View.GONE
-        binding.txtActiveArm.visibility = View.GONE
-
-        binding.btnActiveDesarm.visibility = View.VISIBLE
-        binding.txtActiveDesarm.visibility = View.VISIBLE
+        binding.materialCardArm.visibility = View.VISIBLE
+        binding.materialCardActiveArm.visibility = View.GONE
+        binding.materialCardActiveDisarm.visibility = View.VISIBLE
     }
 
     private fun stateDisarm() {
+        binding.materialCardArm.startAnimation(AlphaAnimation(0.0f, 0.0f))
+        binding.materialCardArm.visibility = View.GONE
 
-        binding.btnDisarm.visibility = View.VISIBLE
-        binding.txtDesarm.visibility = View.VISIBLE
+        binding.materialCardVioled.startAnimation(AlphaAnimation(0.0f, 0.0f))
+        binding.materialCardVioled.visibility = View.GONE
 
-        binding.btnArm.startAnimation(AlphaAnimation(0.0f, 0.0f))
-        binding.btnArm.visibility = View.GONE
-        binding.txtArm.visibility = View.GONE
-
-        binding.btnVioled.startAnimation(AlphaAnimation(0.0f, 0.0f))
-        binding.btnVioled.visibility = View.GONE
-        binding.txtVioled.visibility = View.GONE
-
-        binding.btnActiveArm.visibility = View.VISIBLE
-        binding.txtActiveArm.visibility = View.VISIBLE
-        binding.btnActiveDesarm.visibility = View.GONE
-        binding.txtActiveDesarm.visibility = View.GONE
+        binding.materialCardDisarm.visibility = View.VISIBLE
+        binding.materialCardActiveArm.visibility = View.VISIBLE
+        binding.materialCardActiveDisarm.visibility = View.GONE
     }
 
     private fun stateVioled() {
+        binding.materialCardActiveArm.visibility = View.GONE
+        binding.materialCardActiveDisarm.visibility = View.VISIBLE
 
+        binding.materialCardArm.startAnimation(AlphaAnimation(0.0f, 0.0f))
+        binding.materialCardArm.visibility = View.GONE
 
-        binding.btnActiveArm.visibility = View.GONE
-        binding.txtActiveArm.visibility = View.GONE
-
-        binding.btnActiveDesarm.visibility = View.VISIBLE
-        binding.txtActiveDesarm.visibility = View.VISIBLE
-
-        binding.btnArm.startAnimation(AlphaAnimation(0.0f, 0.0f))
-        binding.btnArm.visibility = View.GONE
-        binding.txtArm.visibility = View.GONE
-
-        binding.btnVioled.visibility = View.VISIBLE
-        binding.txtVioled.visibility = View.VISIBLE
-
+        binding.materialCardVioled.visibility = View.VISIBLE
         binding.btnVioled.startAnimation(configAlphaAnimation(true))
     }
 
      fun disableIconsDefault() {
         binding.progressBarAlarm.visibility = View.GONE
-        binding.btnDefault.visibility = View.GONE
-        binding.txtDefault.visibility = View.GONE
+        binding.materialCardDefault.visibility = View.GONE
     }
 
-    fun enableIconsDefault(){
-        binding.btnArm.visibility = View.GONE
-        binding.txtArm.visibility = View.GONE
-
-        binding.btnDisarm.visibility = View.GONE
-        binding.txtDesarm.visibility = View.GONE
-
-        binding.btnVioled.visibility = View.GONE
-        binding.txtVioled.visibility = View.GONE
-
-        binding.btnDefault.visibility = View.VISIBLE
-        binding.txtDefault.visibility = View.VISIBLE
-
-        for(i in 1..4){
-            updateStateSensor(i, CMND_SENSOR_DEFAULT)
-        }
-    }
+//    fun enableIconsDefault(){
+//        binding.btnArm.visibility = View.GONE
+//        binding.txtArm.visibility = View.GONE
+//
+//        binding.btnDisarm.visibility = View.GONE
+//        binding.txtDesarm.visibility = View.GONE
+//
+//        binding.btnVioled.visibility = View.GONE
+//        binding.txtVioled.visibility = View.GONE
+//
+//        binding.btnDefault.visibility = View.VISIBLE
+//        binding.txtDefault.visibility = View.VISIBLE
+//
+//        for(i in 1..4){
+//            updateStateSensor(i, CMND_SENSOR_DEFAULT)
+//        }
+//    }
 
      fun configAlphaAnimation(violed: Boolean): AlphaAnimation {
-         val alphaAnimation: AlphaAnimation = if (violed){
-             AlphaAnimation(1.0f, 0.0f)
-         } else{
-             AlphaAnimation(1.0f, 0.2f)
-         }
-        alphaAnimation.duration = 500
-        alphaAnimation.interpolator = LinearInterpolator()
-        alphaAnimation.repeatCount = Animation.INFINITE
-        alphaAnimation.repeatMode = Animation.REVERSE
-        return alphaAnimation
+         val alphaAnimation: AlphaAnimation = if (violed) AlphaAnimation(1.0f, 0.0f) else AlphaAnimation(1.0f, 0.2f)
+         alphaAnimation.interpolator = LinearInterpolator()
+         alphaAnimation.repeatCount = Animation.INFINITE
+         alphaAnimation.repeatMode = Animation.REVERSE
+         alphaAnimation.duration = 500
+         return alphaAnimation
     }
 
     private fun stateSensor(imageView: ImageView, status: String) {
@@ -177,11 +150,11 @@ class Alarm{
         }
     }
 
-    fun showAlert(title: String, message: String){
-        MaterialAlertDialogBuilder(context)
-            .setTitle(title)
-            .setMessage(message)
-            .setPositiveButton("Ok") { _, _ -> }
-            .show()
-    }
+//    fun showAlert(title: String, message: String){
+//        MaterialAlertDialogBuilder(context)
+//            .setTitle(title)
+//            .setMessage(message)
+//            .setPositiveButton("Ok") { _, _ -> }
+//            .show()
+//    }
 }
