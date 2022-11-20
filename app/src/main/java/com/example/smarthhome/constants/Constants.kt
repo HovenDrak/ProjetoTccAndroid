@@ -48,8 +48,12 @@ object Constants{
     const val CMND_API_ARM = "armado"
 
     // -------------------- MQTT CONSTANTS AUTOMATION --------------------//
+    val TOPIC_AUTOMATION = "automation"
+    val TOPIC_ALARM = "alarm"
+
+
     val LIST_NAMES_AUTOMATION = listOf("Luz da Sala", "Luz do Quarto", "Luz da Cozinha", "Luz do Banheiro")
-    val LIST_TOPIC_AUTOMATION = listOf("light1", "light2", "light3", "light4","garage")
+    val LIST_TOPIC_AUTOMATION = listOf("light1", "light2", "light3", "light4", "garage")
 
     const val TOPIC_LIGHT = "light"
 

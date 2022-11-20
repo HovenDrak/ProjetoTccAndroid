@@ -10,7 +10,6 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import com.example.smarthhome.R
-import com.example.smarthhome.constants.Constants
 import com.example.smarthhome.databinding.FragmentAutomationBinding
 import com.example.smarthhome.model.Status
 import com.example.smarthhome.constants.Constants.CMND_LIGHT_OFF
@@ -25,12 +24,16 @@ import com.example.smarthhome.constants.Constants.CMND_API_GARAGE_CLOSE
 import com.example.smarthhome.constants.Constants.CMND_API_GARAGE_OPEN
 import com.example.smarthhome.constants.Constants.CMND_MQTT_GARAGE_CLOSE
 import com.example.smarthhome.constants.Constants.CMND_MQTT_GARAGE_OPEN
+import com.example.smarthhome.constants.Constants.LIST_TOPIC_AUTOMATION
 import com.example.smarthhome.constants.Constants.TEXT_LIGHT_OFFLINE
 import com.example.smarthhome.constants.Constants.TEXT_LIGHT_OFF
 import com.example.smarthhome.constants.Constants.TEXT_LIGHT_ON
+import com.example.smarthhome.database.AppDatabase
+import org.koin.java.KoinJavaComponent
 
 class Automation {
 
+    private val db: AppDatabase by KoinJavaComponent.inject(AppDatabase::class.java)
     private lateinit var binding: FragmentAutomationBinding
 
     fun setBinding(binding: FragmentAutomationBinding){
@@ -41,7 +44,7 @@ class Automation {
         binding.progressBarAutomation.visibility = View.GONE
     }
 
-    private fun updateStateLight(cardView: CardView, textView: TextView, imageButton: ImageButton, state: String){
+    private fun updateDeviceAutomation(cardView: CardView, textView: TextView, imageButton: ImageButton, state: String){
         when(state){
             CMND_LIGHT_OFFLINE -> lightOffline(cardView, textView, imageButton)
             CMND_MQTT_LIGHT_OFF -> lightOff(cardView, textView, imageButton)
@@ -73,7 +76,6 @@ class Automation {
     }
 
     fun updateAllStateAutomation(list: List<Status>?){
-
         when(list?.get(0)?.status){
             CMND_API_GARAGE_OPEN -> updateGarage(R.drawable.ic_garage_open, list[0].status, BACKGROUND_COLOR_LIGHT_ON)
             CMND_MQTT_GARAGE_OPEN -> updateGarage(R.drawable.ic_garage_open, list[0].status, BACKGROUND_COLOR_LIGHT_ON)
@@ -83,7 +85,7 @@ class Automation {
 
         for (i in 1..4) {
             Log.i("Automation", "update Light: $i Status: ${list!![i].status}")
-            updateStateLight(i, list[i].status)
+            updateDeviceAutomation(LIST_TOPIC_AUTOMATION[i-1], list[i].status)
         }
     }
 
@@ -94,12 +96,31 @@ class Automation {
         binding.txtStateGarage.text = state.substring(0, 1).uppercase() + state.substring(1)
     }
 
-    fun updateStateLight(light: Int, state: String){
+    fun updateDeviceAutomation(light: String, state: String){
         when(light){
-            1 -> updateStateLight(binding.cardMaterialLamp1, binding.txtStateLamp1, binding.btnLight1, state)
-            2 -> updateStateLight(binding.cardMaterialLamp2, binding.txtStateLamp2, binding.btnLight2, state)
-            3 -> updateStateLight(binding.cardMaterialLamp3, binding.txtStateLamp3, binding.btnLight3, state)
-            4 -> updateStateLight(binding.cardMaterialLamp4, binding.txtStateLamp4, binding.btnLight4, state)
+            LIST_TOPIC_AUTOMATION[0] -> {
+                updateDeviceAutomation(binding.cardMaterialLamp1, binding.txtStateLamp1, binding.btnLight1, state)
+                db.statusDAO.updateState(state, 2)
+            }
+            LIST_TOPIC_AUTOMATION[1] -> {
+                updateDeviceAutomation(binding.cardMaterialLamp2, binding.txtStateLamp2, binding.btnLight2, state)
+                db.statusDAO.updateState(state, 3)
+            }
+            LIST_TOPIC_AUTOMATION[2] -> {
+                updateDeviceAutomation(binding.cardMaterialLamp3, binding.txtStateLamp3, binding.btnLight3, state)
+                db.statusDAO.updateState(state, 4)
+            }
+            LIST_TOPIC_AUTOMATION[3] -> {
+                updateDeviceAutomation(binding.cardMaterialLamp4, binding.txtStateLamp4, binding.btnLight4, state)
+                db.statusDAO.updateState(state, 5)
+            }
+            LIST_TOPIC_AUTOMATION[4] -> {
+                when(state) {
+                    CMND_API_GARAGE_OPEN -> updateGarage(R.drawable.ic_garage_open, state, BACKGROUND_COLOR_LIGHT_ON)
+                    CMND_API_GARAGE_CLOSE -> updateGarage(R.drawable.ic_garage_closed, state, BACKGROUND_COLOR_LIGHT_OFF)
+                }
+                db.statusDAO.updateState(state, 1)
+            }
         }
     }
 

@@ -42,14 +42,10 @@ class AutomationFragment : Fragment() {
     private var showIlumination = true
     private var showGarage = true
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAutomationBinding.inflate(inflater, container, false)
         automationCmnd.setBinding(binding)
         apiRepository.getCurrentStateAutomation(requireContext())
-        mqttConfig()
         configButtons()
 
         binding.materialCardIlumination.setOnClickListener {
@@ -73,16 +69,10 @@ class AutomationFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
-        mqttRepository.unsubscribeTopics(LIST_TOPIC_AUTOMATION)
         showIlumination = true
         showGarage = true
         _binding = null
-    }
-
-    private fun mqttConfig() {
-        mqttRepository.setFragmentCallback(1)
-        mqttRepository.subscribeTopics(LIST_TOPIC_AUTOMATION)
+        super.onDestroyView()
     }
 
     private fun configButtons() {
@@ -136,7 +126,7 @@ class AutomationFragment : Fragment() {
 
     private fun sendCmndGarage(topicGarage: String){
         if (!mqttClient.isConnected)
-            mqttRepository.connectMqtt(LIST_TOPIC_AUTOMATION)
+            mqttRepository.connectMqtt()
 
         if (listStatus[0].status == CMND_API_GARAGE_OPEN){
             mqttRepository.publish("cmnd/$topicGarage", "{\"newState\": $CMND_MQTT_GARAGE_CLOSE, \"user\": \"Mobile\"}")

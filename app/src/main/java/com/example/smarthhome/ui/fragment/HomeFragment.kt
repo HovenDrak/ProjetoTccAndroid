@@ -66,7 +66,6 @@ class HomeFragment: Fragment() {
 
         alarmCmnd.setConfigAlarm(binding, context!!)
         anim.setConfig(binding, context!!)
-        mqttConfig()
         configButtons()
         apiRepository.getCurrentStateHome(requireContext())
 
@@ -74,7 +73,6 @@ class HomeFragment: Fragment() {
     }
 
     override fun onDestroyView() {
-        mqttRepository.unsubscribeTopics(LIST_TOPIC_ALARM)
         _binding = null
         show = false
         super.onDestroyView()
@@ -83,11 +81,6 @@ class HomeFragment: Fragment() {
     override fun onResume() {
         show = false
         super.onResume()
-    }
-
-    private fun mqttConfig() {
-        mqttRepository.setFragmentCallback(0)
-        mqttRepository.subscribeTopics(LIST_TOPIC_ALARM)
     }
 
     private fun configButtons() {

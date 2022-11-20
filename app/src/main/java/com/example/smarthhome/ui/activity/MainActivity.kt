@@ -35,12 +35,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         mqttRepository.disconnect()
+        super.onDestroy()
     }
 
     private fun configMqtt() {
-        mqttRepository.connectMqtt(LIST_TOPIC_ALARM)
+        mqttRepository.connectMqtt()
     }
 
     private fun configNavigation() {

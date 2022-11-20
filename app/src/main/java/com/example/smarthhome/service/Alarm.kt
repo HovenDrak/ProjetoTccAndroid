@@ -5,15 +5,11 @@ import com.example.smarthhome.databinding.FragmentHomeBinding
 import android.view.animation.LinearInterpolator
 import android.view.animation.AlphaAnimation
 import com.example.smarthhome.model.Status
-import com.example.smarthhome.constants.Constants.TAG_MQTT
 import com.example.smarthhome.constants.Constants.CMND_MQTT_SENSOR_CLOSE
 import com.example.smarthhome.constants.Constants.CMND_MQTT_SENSOR_OPEN
 import com.example.smarthhome.constants.Constants.CMND_API_SENSOR_CLOSE
 import com.example.smarthhome.constants.Constants.CMND_API_SENSOR_OPEN
 import com.example.smarthhome.constants.Constants.CMND_SENSOR_DEFAULT
-import com.example.smarthhome.constants.Constants.CMND_MQTT_ARM
-import com.example.smarthhome.constants.Constants.CMND_MQTT_DISARM
-import com.example.smarthhome.constants.Constants.CMND_MQTT_VIOLED
 import com.example.smarthhome.constants.Constants.CMND_API_ARM
 import com.example.smarthhome.constants.Constants.CMND_API_DISARM
 import com.example.smarthhome.constants.Constants.CMND_API_VIOLED
@@ -21,13 +17,15 @@ import android.view.animation.Animation
 import com.example.smarthhome.R
 import android.widget.ImageView
 import android.view.View
-import android.util.Log
 import com.example.smarthhome.constants.Constants.CMND_API_SENSOR_BYPASS
 import com.example.smarthhome.constants.Constants.CMND_MQTT_SENSOR_BYPASS
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.example.smarthhome.constants.Constants.LIST_TOPIC_ALARM
+import com.example.smarthhome.database.AppDatabase
+import org.koin.java.KoinJavaComponent
 
 class Alarm{
 
+    private val db: AppDatabase by KoinJavaComponent.inject(AppDatabase::class.java)
     private lateinit var binding: FragmentHomeBinding
     private lateinit var context: Context
     private var canArm = false
@@ -74,24 +72,6 @@ class Alarm{
         binding.materialCardDefault.visibility = View.GONE
     }
 
-//    fun enableIconsDefault(){
-//        binding.btnArm.visibility = View.GONE
-//        binding.txtArm.visibility = View.GONE
-//
-//        binding.btnDisarm.visibility = View.GONE
-//        binding.txtDesarm.visibility = View.GONE
-//
-//        binding.btnVioled.visibility = View.GONE
-//        binding.txtVioled.visibility = View.GONE
-//
-//        binding.btnDefault.visibility = View.VISIBLE
-//        binding.txtDefault.visibility = View.VISIBLE
-//
-//        for(i in 1..4){
-//            updateStateSensor(i, CMND_SENSOR_DEFAULT)
-//        }
-//    }
-
      fun configAlphaAnimation(violed: Boolean): AlphaAnimation {
          val alphaAnimation: AlphaAnimation = if (violed) AlphaAnimation(1.0f, 0.0f) else AlphaAnimation(1.0f, 0.2f)
          alphaAnimation.interpolator = LinearInterpolator()
@@ -121,6 +101,7 @@ class Alarm{
             CMND_API_DISARM -> stateDisarm()
             CMND_API_ARM -> stateArm()
         }
+
         for (i in 1..5) {
             when (i) {
                 1 -> stateSensor(binding.setor1ImgStatus, list[i].status)
@@ -131,30 +112,33 @@ class Alarm{
         }
     }
 
-    fun updateStateSensor(setor: Int, status: String) {
-        Log.i(TAG_MQTT, "update sensor $setor for status $status")
-        when (setor) {
-            1 -> stateSensor(binding.setor1ImgStatus, status)
-            2 -> stateSensor(binding.setor2ImgStatus, status)
-            3 -> stateSensor(binding.setor3ImgStatus, status)
-            4 -> stateSensor(binding.setor4ImgStatus, status)
+    fun updateDeviceAlarm(device: String, status: String) {
+        when (device) {
+            LIST_TOPIC_ALARM[0] -> updateStateAlarm(status)
+            LIST_TOPIC_ALARM[1] -> {
+                stateSensor(binding.setor1ImgStatus, status)
+                db.statusDAO.updateStatusAlarm(status, if (status == CMND_API_SENSOR_BYPASS) 1 else 0,1)
+            }
+            LIST_TOPIC_ALARM[2] -> {
+                stateSensor(binding.setor2ImgStatus, status)
+                db.statusDAO.updateStatusAlarm(status, if (status == CMND_API_SENSOR_BYPASS) 1 else 0,2)
+            }
+            LIST_TOPIC_ALARM[3] -> {
+                stateSensor(binding.setor3ImgStatus, status)
+                db.statusDAO.updateStatusAlarm(status, if (status == CMND_API_SENSOR_BYPASS) 1 else 0,3)
+            }
+            LIST_TOPIC_ALARM[4] -> {
+                stateSensor(binding.setor4ImgStatus, status)
+                db.statusDAO.updateStatusAlarm(status, if (status == CMND_API_SENSOR_BYPASS) 1 else 0,4)
+            }
         }
     }
 
-    fun updateStateAlarm(status: String) {
-        Log.d(TAG_MQTT, "update alarm for status $status")
+    private fun updateStateAlarm(status: String) {
         when (status) {
             CMND_API_VIOLED -> stateVioled()
             CMND_API_DISARM -> stateDisarm()
             CMND_API_ARM -> stateArm()
         }
     }
-
-//    fun showAlert(title: String, message: String){
-//        MaterialAlertDialogBuilder(context)
-//            .setTitle(title)
-//            .setMessage(message)
-//            .setPositiveButton("Ok") { _, _ -> }
-//            .show()
-//    }
 }

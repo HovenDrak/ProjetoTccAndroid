@@ -102,7 +102,6 @@ class EventAdapter(
                     break
                 }
             }
-
             return Pair(imgEvent, textEvent)
         }
     }
