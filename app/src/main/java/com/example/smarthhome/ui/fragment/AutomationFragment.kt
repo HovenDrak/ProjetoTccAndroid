@@ -94,12 +94,6 @@ class AutomationFragment : Fragment() {
             sendCmndLight(3)
         }
 
-        binding.btnLight4.setOnClickListener {
-            listStatus = db.statusDAO.consultAllState()
-            animationBounce(binding.cardMaterialLamp4)
-            sendCmndLight(4)
-        }
-
         binding.btnGarage.setOnClickListener{
             listStatus = db.statusDAO.consultAllState()
             animationBounce(binding.cardMaterialGarage)
@@ -113,14 +107,12 @@ class AutomationFragment : Fragment() {
     }
 
     private fun sendCmndLight(light: Int){
-        if(listStatus[light].status == CMND_LIGHT_ON){
-            mqttRepository.publish("cmnd/$TOPIC_LIGHT", "{\"light\": ${light-1}, \"newState\": \"$CMND_LIGHT_OFF\", \"user\": \"Mobile\"}")
-            Toast.makeText(context, "Comando enviado com sucesso.", Toast.LENGTH_SHORT).show()
+        if (listStatus[light].status == CMND_LIGHT_ON)
+            cmdLight(light, CMND_LIGHT_OFF)
 
-        } else if(listStatus[light].status == CMND_LIGHT_OFF){
-            mqttRepository.publish("cmnd/$TOPIC_LIGHT", "{\"light\": ${light-1}, \"newState\": \"$CMND_LIGHT_ON\", \"user\": \"Mobile\"}")
-            Toast.makeText(context, "Comando enviado com sucesso.", Toast.LENGTH_SHORT).show()
-        }
+        else if (listStatus[light].status == CMND_LIGHT_OFF)
+            cmdLight(light, CMND_LIGHT_ON)
+
         animationSendCmnd(light)
     }
 
@@ -144,8 +136,18 @@ class AutomationFragment : Fragment() {
             1 -> binding.btnLight1.startAnimation(automationCmnd.configAlphaAnimation())
             2 -> binding.btnLight2.startAnimation(automationCmnd.configAlphaAnimation())
             3 -> binding.btnLight3.startAnimation(automationCmnd.configAlphaAnimation())
-            4 -> binding.btnLight4.startAnimation(automationCmnd.configAlphaAnimation())
             5 -> binding.btnGarage.startAnimation(automationCmnd.configAlphaAnimation())
         }
+    }
+
+    private fun cmdLight(light: Int, cmd: String){
+        if (mqttClient.isConnected) {
+            mqttRepository.publish("cmnd/$TOPIC_LIGHT",
+                "{\"light\": ${light - 1}, \"newState\": \"$cmd\", \"user\": \"Mobile\"}")
+            Toast.makeText(context, "Comando enviado com sucesso.", Toast.LENGTH_SHORT).show()
+        } else
+            mqttRepository.connectMqtt(
+                "cmnd/$TOPIC_LIGHT",
+                "{\"light\": ${light - 1}, \"newState\": \"$cmd\", \"user\": \"Mobile\"}")
     }
 }

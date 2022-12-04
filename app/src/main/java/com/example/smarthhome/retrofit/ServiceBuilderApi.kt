@@ -1,11 +1,11 @@
 package com.example.smarthhome.retrofit
 
+import com.example.smarthhome.constants.Constants.HOST
 import com.example.smarthhome.retrofit.service.AlarmService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import com.example.smarthhome.constants.Constants.HOST_API
 
 class ServiceBuilderApi{
 
@@ -19,7 +19,7 @@ class ServiceBuilderApi{
             .build()
 
         val retrofit: Retrofit = Retrofit.Builder()
-            .baseUrl(HOST_API)
+            .baseUrl(HOST)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()

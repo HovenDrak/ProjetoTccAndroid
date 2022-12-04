@@ -18,7 +18,10 @@ import com.example.smarthhome.R
 import android.widget.ImageView
 import android.view.View
 import com.example.smarthhome.constants.Constants.CMND_API_SENSOR_BYPASS
+import com.example.smarthhome.constants.Constants.CMND_MQTT_ARM
+import com.example.smarthhome.constants.Constants.CMND_MQTT_DISARM
 import com.example.smarthhome.constants.Constants.CMND_MQTT_SENSOR_BYPASS
+import com.example.smarthhome.constants.Constants.CMND_MQTT_VIOLED
 import com.example.smarthhome.constants.Constants.LIST_TOPIC_ALARM
 import com.example.smarthhome.database.AppDatabase
 import org.koin.java.KoinJavaComponent
@@ -96,18 +99,13 @@ class Alarm{
     }
 
     fun updateAllStateAlarm(list: List<Status>?) {
-        when (list!![0].status) {
-            CMND_API_VIOLED -> stateVioled()
-            CMND_API_DISARM -> stateDisarm()
-            CMND_API_ARM -> stateArm()
-        }
+        updateStateAlarm(list!![0].status)
 
         for (i in 1..5) {
             when (i) {
                 1 -> stateSensor(binding.setor1ImgStatus, list[i].status)
                 2 -> stateSensor(binding.setor2ImgStatus, list[i].status)
                 3 -> stateSensor(binding.setor3ImgStatus, list[i].status)
-                4 -> stateSensor(binding.setor4ImgStatus, list[i].status)
             }
         }
     }
@@ -127,18 +125,14 @@ class Alarm{
                 stateSensor(binding.setor3ImgStatus, status)
                 db.statusDAO.updateStatusAlarm(status, if (status == CMND_API_SENSOR_BYPASS) 1 else 0,3)
             }
-            LIST_TOPIC_ALARM[4] -> {
-                stateSensor(binding.setor4ImgStatus, status)
-                db.statusDAO.updateStatusAlarm(status, if (status == CMND_API_SENSOR_BYPASS) 1 else 0,4)
-            }
         }
     }
 
     private fun updateStateAlarm(status: String) {
         when (status) {
-            CMND_API_VIOLED -> stateVioled()
-            CMND_API_DISARM -> stateDisarm()
-            CMND_API_ARM -> stateArm()
+            CMND_API_VIOLED, CMND_MQTT_VIOLED -> stateVioled()
+            CMND_API_DISARM, CMND_MQTT_DISARM -> stateDisarm()
+            CMND_API_ARM, CMND_MQTT_ARM -> stateArm()
         }
     }
 }

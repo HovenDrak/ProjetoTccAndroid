@@ -36,9 +36,29 @@ class MqttRepository(private val mqttClient: MqttAndroidClient) {
 
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
                     Log.d(TAG_MQTT, "Connection failure + $exception")
+                    connectMqtt()
                 }
             })
 
+        } catch (e: MqttException) { e.printStackTrace() }
+    }
+
+    fun connectMqtt(topic: String, cmd: String) {
+        mqttClient.setCallback(callbackMqtt)
+
+        try {
+            mqttClient.connect(setMqttAuthentication(), null, object : IMqttActionListener {
+                override fun onSuccess(asyncActionToken: IMqttToken?) {
+                    Log.d(TAG_MQTT, "Connection success")
+                    subscribe("status/$TOPIC_ALARM")
+                    subscribe("status/$TOPIC_AUTOMATION")
+                    publish(topic, cmd)
+                }
+
+                override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
+                    Log.d(TAG_MQTT, "Connection failure + $exception")
+                }
+            })
         } catch (e: MqttException) { e.printStackTrace() }
     }
 
@@ -94,20 +114,24 @@ class MqttRepository(private val mqttClient: MqttAndroidClient) {
     }
 
     fun publish(topic: String, msg: String, qos: Int = 1, retained: Boolean = false) {
-        try {
-            val message = MqttMessage()
-            message.payload = msg.toByteArray()
-            message.qos = qos
-            message.isRetained = retained
-            mqttClient.publish(topic, message, null, object : IMqttActionListener {
-                override fun onSuccess(asyncActionToken: IMqttToken?) {
-                    Log.d(TAG_MQTT, "$msg published to $topic")
-                }
-                override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
-                    Log.d(TAG_MQTT, "Failed to publish $msg to $topic")
-                }
-            })
-        } catch (e: MqttException) { e.printStackTrace() }
+        if (mqttClient.isConnected)
+            try {
+                val message = MqttMessage()
+                message.payload = msg.toByteArray()
+                message.qos = qos
+                message.isRetained = retained
+                mqttClient.publish(topic, message, null, object : IMqttActionListener {
+                    override fun onSuccess(asyncActionToken: IMqttToken?) {
+                        Log.d(TAG_MQTT, "$msg published to $topic")
+                    }
+                    override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
+                        Log.d(TAG_MQTT, "Failed to publish $msg to $topic")
+                    }
+                })
+            } catch (e: MqttException) { e.printStackTrace() }
+
+        else
+            connectMqtt(topic, msg)
     }
 
     fun disconnect() {

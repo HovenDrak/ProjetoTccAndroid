@@ -30,11 +30,11 @@ class EventsHistoryFragment : Fragment(){
         eventsHistory.setBinding(binding, requireContext())
         eventsHistory.configAdapter(eventsDao.getAllEvents())
 
-        val dateNow = LocalDateTime.now().minusMonths(1)
+        val dateNow = LocalDateTime.now()
         apiRepository.getDayLog(requireContext(), dateNow.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")))
 
         val listener = OnDateSetListener {_, year, month, dayOfMonth ->
-            val newMonth = if (month + 1 < 10) "0${month + 1}" else month + 1
+            val newMonth = if (month + 1 < 10) "0${month +1}" else month +1
             val newDay = if (dayOfMonth < 10) "0$dayOfMonth" else dayOfMonth
             val dateSelect = "$newDay-$newMonth-$year 00:00:00"
             eventsHistory.activeLoading()
@@ -42,7 +42,7 @@ class EventsHistoryFragment : Fragment(){
             apiRepository.getDayLog(requireContext(), dateSelect)
         }
 
-        val datePickerDialog = DatePickerDialog(requireContext(), listener, dateNow.year, dateNow.monthValue, dateNow.dayOfMonth)
+        val datePickerDialog = DatePickerDialog(requireContext(), listener, dateNow.year, dateNow.monthValue - 1, dateNow.dayOfMonth)
 
         binding.btnEventsDate.setOnClickListener {
             datePickerDialog.show()
@@ -52,12 +52,12 @@ class EventsHistoryFragment : Fragment(){
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 
     override fun onResume() {
-        super.onResume()
         eventsHistory.refreshAdapter(eventsDao.getAllEvents())
+        super.onResume()
     }
 }

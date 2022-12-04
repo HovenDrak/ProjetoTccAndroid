@@ -102,12 +102,6 @@ class HomeFragment: Fragment() {
             visualizeSensorLaunch.launch(intent)
         }
 
-        binding.materialCardViewSensor4.setOnClickListener {
-            val intent = Intent(requireContext(), VisualizeSensorActivity::class.java)
-            intent.putExtra("SENSOR", 4)
-            visualizeSensorLaunch.launch(intent)
-        }
-
         binding.materialCardActiveDisarm.setOnClickListener{
             if(show) {
                 show = false
@@ -171,7 +165,10 @@ class HomeFragment: Fragment() {
         }
 
     private fun sendCommand(cmd: String){
-        mqttRepository.publish(TOPIC_CMND_ALARM, cmd)
+        if (mqttClient.isConnected)
+            mqttRepository.publish(TOPIC_CMND_ALARM, cmd)
+        else
+            mqttRepository.connectMqtt(TOPIC_CMND_ALARM, cmd)
     }
 
     private fun cmndBypassSensors() {

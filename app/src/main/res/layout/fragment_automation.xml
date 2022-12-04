@@ -91,7 +91,7 @@
                         android:id="@+id/scrollViewILighting"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -175,7 +175,6 @@
                                 app:layout_constraintTop_toTopOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toEndOf="@id/cardMaterialLamp1"
-                                app:layout_constraintBottom_toTopOf="@id/cardMaterialLamp4"
                                 >
 
                                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -231,17 +230,14 @@
                                 android:id="@+id/cardMaterialLamp3"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="16dp"
                                 android:layout_marginTop="16dp"
-                                app:cardElevation="8dp"
-                                app:cardCornerRadius="32dp"
+                                android:layout_marginBottom="16dp"
                                 app:cardBackgroundColor="@color/dark__gray"
-                                app:layout_constraintHorizontal_bias="0.045"
-                                app:layout_constraintStart_toStartOf="parent"
+                                app:cardCornerRadius="32dp"
+                                app:cardElevation="8dp"
                                 app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toStartOf="@id/cardMaterialLamp4"
-                                app:layout_constraintTop_toBottomOf="@id/cardMaterialLamp1"
-                                >
+                                app:layout_constraintStart_toStartOf="@+id/cardMaterialLamp1"
+                                app:layout_constraintTop_toBottomOf="@id/cardMaterialLamp1">
 
                                 <androidx.constraintlayout.widget.ConstraintLayout
                                     android:layout_width="match_parent"
@@ -252,14 +248,13 @@
                                         android:layout_width="110dp"
                                         android:layout_height="110dp"
                                         android:layout_marginStart="24dp"
-                                        android:layout_marginEnd="24dp"
                                         android:layout_marginTop="16dp"
+                                        android:layout_marginEnd="24dp"
                                         android:background="@drawable/light_off"
                                         android:contentDescription="status lâmpada"
                                         app:layout_constraintEnd_toEndOf="parent"
-                                        app:layout_constraintTop_toTopOf="parent"
                                         app:layout_constraintStart_toStartOf="parent"
-                                        />
+                                        app:layout_constraintTop_toTopOf="parent" />
 
                                     <TextView
                                         android:id="@+id/txtNameLamp3"
@@ -267,9 +262,9 @@
                                         android:layout_height="wrap_content"
                                         android:layout_margin="2dp"
                                         android:text="Luz da Sala"
-                                        android:textStyle="bold"
                                         android:textAlignment="center"
                                         android:textColor="@color/black"
+                                        android:textStyle="bold"
                                         app:layout_constraintEnd_toEndOf="parent"
                                         app:layout_constraintStart_toStartOf="parent"
                                         app:layout_constraintTop_toBottomOf="@id/btnLight3" />
@@ -280,80 +275,19 @@
                                         android:layout_height="wrap_content"
                                         android:layout_margin="10dp"
                                         android:text="Offline"
-                                        android:textStyle="bold"
-                                        android:textAlignment="center"
-                                        android:textColor="@color/black"
-                                        app:layout_constraintEnd_toEndOf="parent"
-                                        app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintTop_toBottomOf="@id/txtNameLamp3"/>
-
-                                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                            </com.google.android.material.card.MaterialCardView>
-
-                            <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/cardMaterialLamp4"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="16dp"
-                                android:layout_marginTop="16dp"
-                                app:cardElevation="8dp"
-                                app:cardCornerRadius="32dp"
-                                app:cardBackgroundColor="@color/dark__gray"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@id/cardMaterialLamp3"
-                                app:layout_constraintTop_toBottomOf="@id/cardMaterialLamp2"
-                                >
-
-                                <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
-
-                                    <ImageButton
-                                        android:id="@+id/btnLight4"
-                                        android:layout_width="110dp"
-                                        android:layout_height="110dp"
-                                        android:layout_marginStart="24dp"
-                                        android:layout_marginEnd="24dp"
-                                        android:layout_marginTop="16dp"
-                                        android:background="@drawable/light_off"
-                                        android:contentDescription="status lâmpada"
-                                        app:layout_constraintEnd_toEndOf="parent"
-                                        app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintTop_toTopOf="parent" />
-
-                                    <TextView
-                                        android:id="@+id/txtNameLamp4"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_margin="2dp"
-                                        android:text="Luz da Sala"
-                                        android:textAlignment="center"
-                                        android:textColor="@color/black"
-                                        android:textStyle="bold"
-                                        app:layout_constraintEnd_toEndOf="parent"
-                                        app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintTop_toBottomOf="@id/btnLight4" />
-
-                                    <TextView
-                                        android:id="@+id/txtStateLamp4"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_margin="10dp"
-                                        android:text="Offline"
                                         android:textAlignment="center"
                                         android:textColor="@color/black"
                                         android:textStyle="bold"
                                         app:layout_constraintBottom_toBottomOf="parent"
                                         app:layout_constraintEnd_toEndOf="parent"
                                         app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintTop_toBottomOf="@id/txtNameLamp4" />
+                                        app:layout_constraintTop_toBottomOf="@id/txtNameLamp3" />
 
                                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                             </com.google.android.material.card.MaterialCardView>
+
+
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 

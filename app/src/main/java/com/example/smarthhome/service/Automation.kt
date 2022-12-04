@@ -83,7 +83,7 @@ class Automation {
             CMND_MQTT_GARAGE_CLOSE -> updateGarage(R.drawable.ic_garage_closed, list[0].status, BACKGROUND_COLOR_LIGHT_OFF)
         }
 
-        for (i in 1..4) {
+        for (i in 1..3) {
             Log.i("Automation", "update Light: $i Status: ${list!![i].status}")
             updateDeviceAutomation(LIST_TOPIC_AUTOMATION[i-1], list[i].status)
         }
@@ -109,10 +109,6 @@ class Automation {
             LIST_TOPIC_AUTOMATION[2] -> {
                 updateDeviceAutomation(binding.cardMaterialLamp3, binding.txtStateLamp3, binding.btnLight3, state)
                 db.statusDAO.updateState(state, 4)
-            }
-            LIST_TOPIC_AUTOMATION[3] -> {
-                updateDeviceAutomation(binding.cardMaterialLamp4, binding.txtStateLamp4, binding.btnLight4, state)
-                db.statusDAO.updateState(state, 5)
             }
             LIST_TOPIC_AUTOMATION[4] -> {
                 when(state) {

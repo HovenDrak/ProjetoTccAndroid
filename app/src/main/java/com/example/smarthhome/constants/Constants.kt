@@ -11,8 +11,8 @@ object Constants{
     const val NAME_DATABASE = "smarthome.db"
 
     // -------------------- MQTT CONSTANTS ALARM --------------------//
-    val LIST_NAME_SENSORS = arrayListOf("Porta Sala", "Porta Fundo", "Porta Sacada", "Janela")
-    val LIST_TOPIC_ALARM = listOf("alarme", "setor1", "setor2", "setor3", "setor4")
+    val LIST_NAME_SENSORS = arrayListOf("Porta Sala", "Porta Fundo", "Porta Sacada")
+    val LIST_TOPIC_ALARM = listOf("alarme", "setor1", "setor2", "setor3")
 
     const val TOPIC_CMND_ALARM = "cmnd/alarme"
     const val TOPIC_CMND_ALARM_BYPASS = "cmnd/alarme/bypass"
@@ -48,9 +48,8 @@ object Constants{
     const val CMND_API_ARM = "armado"
 
     // -------------------- MQTT CONSTANTS AUTOMATION --------------------//
-    val TOPIC_AUTOMATION = "automation"
-    val TOPIC_ALARM = "alarm"
-
+    const val TOPIC_AUTOMATION = "automation"
+    const val TOPIC_ALARM = "alarm"
 
     val LIST_NAMES_AUTOMATION = listOf("Luz da Sala", "Luz do Quarto", "Luz da Cozinha", "Luz do Banheiro")
     val LIST_TOPIC_AUTOMATION = listOf("light1", "light2", "light3", "light4", "garage")
@@ -73,7 +72,7 @@ object Constants{
     const val TEXT_LIGHT_ON = "Ligado"
 
     // -------------------- CONSTANTS GENERAL --------------------//
-    const val HOST_API = "https://api-tcc-oficial.herokuapp.com"
+    const val HOST = "http://54.174.25.158/"
     const val PATH_API_AUTOMATION = "/automation/status/all"
     const val PATH_API_HOME = "/alarm/status/all"
     const val PATH_API_LOG_ALL = "/all/log"

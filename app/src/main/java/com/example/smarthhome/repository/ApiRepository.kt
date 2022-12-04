@@ -42,7 +42,7 @@ class ApiRepository {
                 val list: List<Status>? = response.body()
                 db.statusDAO.deleteAlarmDB()
 
-                if(list!!.isNotEmpty()){
+                if (list!!.isNotEmpty()){
                     for (i in list.indices){
                         db.statusDAO.insertStatusAlarm(list[i].id - 1, list[i].name, list[i].status, listNameSensor[i], if(list[i].status == CMND_API_SENSOR_BYPASS) 1 else 0)
                     }
@@ -101,42 +101,6 @@ class ApiRepository {
             }
         })
     }
-
-//    fun getAllLog(context: Context, day: String){
-//        val getLogAllResult: Call<List<Event>> = api.getAlarmService().getEvents()
-//
-//        getLogAllResult.enqueue(object: Callback<List<Event>>{
-//            override fun onResponse(call: Call<List<Event>>, response: Response<List<Event>>) {
-//                response.body()?.let {
-//                    eventsDao.clearAndAddList(it)
-//                    val events = mutableListOf<Event>()
-//                    val dateNow = LocalDateTime.parse(day, DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))
-//                    dateNow.minusHours(3)
-//
-//                    eventsHistory.configDateEvent(dateNow.toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyy")), true)
-//
-//                    for (log in it){
-//                        val data = LocalDateTime.parse(log.date, DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))
-//                        data.minusHours(3)
-//
-//                        if (data.dayOfMonth == dateNow.dayOfMonth && data.monthValue == dateNow.monthValue){
-//                            events.add(log)
-//                        }
-//                    }
-//                    if(events.isEmpty())
-//                        eventsHistory.activeNotFoundEvents()
-//                    else
-//                        eventsHistory.activeWidgetsView()
-//                    eventsHistory.getAdapter().refresh(events)
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<List<Event>>, t: Throwable) {
-//                Toast.makeText(context, ERROR_LOAD_API, Toast.LENGTH_LONG).show()
-//                Log.i("Error HTTP", t.toString())
-//            }
-//        })
-//    }
 
     fun getDayLog(context: Context, date: String){
         val getLogDayResult: Call<List<Event>> = api.getAlarmService().getDayEvents(date.substring(0, 10))

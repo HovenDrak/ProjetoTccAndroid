@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_logo_main"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmarthHome"
-        android:name=".application.AppAplication">
+        android:name=".application.AppAplication"
+        android:usesCleartextTraffic="true">
 
         <activity
             android:name=".ui.activity.MainActivity"
